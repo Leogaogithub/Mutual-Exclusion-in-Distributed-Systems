@@ -10,7 +10,7 @@ public class Node{
 	public int meanD = 0;
 	public int meanC = 0;
 	public int numRequest = 0;		
-	NodeInfor localInfor = null;	
+	public NodeInfor localInfor = null;	
 	public Map<Integer,NodeInfor> neighbors = new HashMap<Integer,NodeInfor>();	
 	
 	

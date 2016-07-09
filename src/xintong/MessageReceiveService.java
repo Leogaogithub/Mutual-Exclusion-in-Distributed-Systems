@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import leo.Node;
+
 public class MessageReceiveService {
 	Node node=null;
 	private static MessageReceiveService instance = new MessageReceiveService();
@@ -18,7 +20,6 @@ public class MessageReceiveService {
 	 */
 	public void connectNode(Node node) throws IOException{
 		this.node=node;
-
 	}
 	
 	/**
@@ -26,9 +27,8 @@ public class MessageReceiveService {
 	 * @param msg
 	 * @param ippaddress
 	 */
-	public  void receive(String msg,String ippaddress){
-		int channelID = parseIpaddr(ippaddress);
-	
+	public  void receive(String msg,int channelID){
+
 		for(IreceiveMessage obj:listenerList){
 			obj.receive(msg, channelID);
 		}
@@ -49,20 +49,7 @@ public class MessageReceiveService {
 	public void unregister(IreceiveMessage obj){
 		listenerList.remove(obj);
 	}
-	
-	/**
-	 * parse the ippaddress to corresponding channelid which contains the ip as remote node
-	 * @param ippaddress
-	 * @return
-	 */
-	public int parseIpaddr(String ippaddress){
-		
-		n\
-		
-		
-	}
-	
-	
+
 	
 
 }

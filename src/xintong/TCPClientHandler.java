@@ -6,13 +6,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class TCPClientHandler implements Runnable{
+import leo.Node;
 
+public class TCPClientHandler implements Runnable{
+	int destChannelID;
 	private Socket socket = null;
 	
-	public TCPClientHandler(Socket socket){
+	public TCPClientHandler(Socket socket, int channelID){
 		this.socket=socket;
-
+		this.destChannelID=channelID;
 	}
 	
 	@Override
@@ -25,14 +27,16 @@ public class TCPClientHandler implements Runnable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			String receivedMsg = null;	
-			while(reader.hasNextLine()){
-				receivedMsg = reader.nextLine();
-				System.out.println("Clinet handler received msg:"+receivedMsg);
-				MessageReceiveService.getInstance().receive(receivedMsg,socket.getInetAddress().toString());
-							
+			
+			while(true){
+				String receivedMsg = null;	
+				while(reader.hasNextLine()){
+					receivedMsg = reader.nextLine();
+					System.out.println("Clinet handler received msg:"+receivedMsg);
+					MessageReceiveService.getInstance().receive(receivedMsg, destChannelID);
+			
+				}
 			}
-				
 
 	}
 

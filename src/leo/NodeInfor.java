@@ -1,8 +1,8 @@
 package leo;
 public class NodeInfor {
-	int nodeId;
-	String hostName;
-	int port;
+	public int nodeId;
+	public String hostName;
+	public int port;
 	
 	NodeInfor(){
 		nodeId = 0;
