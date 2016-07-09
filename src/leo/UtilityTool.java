@@ -1,4 +1,7 @@
 package leo;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,13 +75,26 @@ public class UtilityTool {
 		System.out.println(cont);
 	}
 	
-
-	
 	public static boolean isValidLine(String str){		
 		str = str.trim();
 		if(!checkStringNotEmpty(str)) return false;		
 		if(str.startsWith("#")) return false;
 		return true;		
+	}
+
+	public static String byteToString(ByteBuffer byteBuffer, int MESSAGE_SIZE)	
+	{		
+		byteBuffer.flip();
+		byteBuffer.position(0);
+		byteBuffer.limit(MESSAGE_SIZE);
+		byte[] bufArr = new byte[byteBuffer.remaining()];		
+		for(int i = 0; i < byteBuffer.remaining(); i++){
+			bufArr[i] = '\0';
+		}
+		byteBuffer.get(bufArr);
+		String result = new String(bufArr);
+		result = result.substring(0, result.indexOf('\0'));		
+		return result;
 	}
 	
 	//greater id is client
@@ -87,5 +103,8 @@ public class UtilityTool {
 			return true;
 		}
 		return false;
-	}       
+	}
+	
+	
+       
 }

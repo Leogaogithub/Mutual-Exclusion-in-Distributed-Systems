@@ -38,7 +38,7 @@ public class Paser {
 				}else if(part2linesNum < node.numNodes){
 					NodeInfor nodeInfor = new NodeInfor();
 					nodeInfor.nodeId = Integer.parseInt(args[0]);
-					nodeInfor.hostName = args[1];
+					nodeInfor.hostName = args[1]+".utdallas.edu";
 					nodeInfor.port = Integer.parseInt(args[2]);
 					if(nodeInfor.nodeId == localNodeId){
 						node.setLocalInfo(nodeInfor);
