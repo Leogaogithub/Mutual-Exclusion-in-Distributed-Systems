@@ -8,10 +8,10 @@ import xintong.IsendMessage;
 
 public abstract class Channel implements IreceiveMessage,IsendMessage{
 
-	protected int channelID;
-	protected Node local;
-	protected Node remote;
-	protected Socket socket;
+	public int channelID;
+	public Node local;
+	public Node remote;
+	public Socket socket;
 	@Override
 	public void receive(String message, int channel) {
 		
