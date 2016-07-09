@@ -1,6 +1,4 @@
 package leo;
-
-
 public abstract class Channel{
 	public int channelID;
 	//protected NodeInfor remote;

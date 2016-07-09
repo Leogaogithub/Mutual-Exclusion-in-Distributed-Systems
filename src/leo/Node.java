@@ -7,9 +7,10 @@ public class Node{
 	public int numNodes = 0;
 	public int meanD = 0;
 	public int meanC = 0;
-	public int numRequest = 0;		
-	NodeInfor localInfor = null;	
+	public int numRequest = 0;	
+	public NodeInfor localInfor = null;	
 	public Map<Integer,NodeInfor> neighbors = new HashMap<Integer,NodeInfor>();		
+
 	protected Map<Integer,Channel> channelRemoteMap = new HashMap<Integer,Channel>();
 	
 	public void addNeighbor(NodeInfor nodeInfor){
