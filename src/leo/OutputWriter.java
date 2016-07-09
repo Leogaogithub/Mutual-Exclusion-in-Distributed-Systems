@@ -1,7 +1,5 @@
-package MyUtil;
-
+package leo;
 public class OutputWriter extends MyWriter{
-
 	private static OutputWriter instance =  new OutputWriter();		
 
 	public  static OutputWriter getSingle(){
@@ -13,9 +11,8 @@ public class OutputWriter extends MyWriter{
 	}
 	public static void main(String[] args) {
 		String name = "test.out";
-		OutputWriter.getSingle().open(name);
+		OutputWriter.getSingle().open(name, 1);
 		OutputWriter.getSingle().clear();
 		OutputWriter.getSingle().write(name.substring(0,2));
 	}
-
 }

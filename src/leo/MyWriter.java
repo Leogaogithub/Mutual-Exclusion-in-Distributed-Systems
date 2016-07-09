@@ -1,20 +1,18 @@
-package MyUtil;
-
+package leo;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class MyWriter {
-
 	private RandomAccessFile logFile = null;
 	String prefix = "";
 	
 	//private String rootPath = "";
-	public void open(String name){
+	public void open(String name, int nodeId){
 		try {
 			logFile = new RandomAccessFile(name, "rw");
-			int id =  ConfigExpert.getSingleton().getLocalNodeId();
-			prefix = String.valueOf(id);
+			//int id =  ConfigExpert.getSingleton().getLocalNodeId();
+			prefix = String.valueOf(nodeId);
 			prefix += ":";
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();

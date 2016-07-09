@@ -1,7 +1,4 @@
-package MyUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+package leo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,22 +80,6 @@ public class UtilityTool {
 		if(str.startsWith("#")) return false;
 		return true;		
 	}
-
-	public static String byteToString(ByteBuffer byteBuffer)	
-	{
-		int MESSAGE_SIZE = ConfigExpert.getSingleton().MESSAGE_SIZE;
-		byteBuffer.flip();
-		byteBuffer.position(0);
-		byteBuffer.limit(MESSAGE_SIZE);
-		byte[] bufArr = new byte[byteBuffer.remaining()];		
-		for(int i = 0; i < byteBuffer.remaining(); i++){
-			bufArr[i] = '\0';
-		}
-		byteBuffer.get(bufArr);
-		String result = new String(bufArr);
-		result = result.substring(0, result.indexOf('\0'));		
-		return result;
-	}
 	
 	//greater id is client
 	public static boolean preIsClient(int preId, int postId){
@@ -106,8 +87,5 @@ public class UtilityTool {
 			return true;
 		}
 		return false;
-	}
-	
-	
-       
+	}       
 }

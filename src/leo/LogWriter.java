@@ -1,5 +1,4 @@
-package MyUtil;
-
+package leo;
 public class LogWriter extends MyWriter{
 	private static LogWriter instance =  new LogWriter();		
 
@@ -9,7 +8,7 @@ public class LogWriter extends MyWriter{
 	
 	public static void main(String[] args) {
 		String name = "test.out";
-		LogWriter.getSingle().open(name);
+		LogWriter.getSingle().open(name, 1);
 		LogWriter.getSingle().clear();
 		LogWriter.getSingle().write(name.substring(0,2));
 	}
