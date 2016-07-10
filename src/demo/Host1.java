@@ -2,7 +2,6 @@ package demo;
 
 import leo.Controller;
 import leo.LogWriter;
-import leo.Mytest;
 import leo.OutputWriter;
 
 public class Host1 {
