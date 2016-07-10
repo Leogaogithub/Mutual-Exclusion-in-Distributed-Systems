@@ -6,9 +6,9 @@ public class OutputWriter extends MyWriter{
 		return instance;
 	}		
 	
-	public void open(String name){
-		clear();
+	public void open(String name){		
 		super.open(name);
+		clear();
 	}	
 
 	public static void main(String[] args) {

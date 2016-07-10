@@ -1,17 +1,21 @@
 package leo;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 public class ChannelManager {
 	static ChannelManager single = new ChannelManager();	
-	HashMap<Integer, Channel> channels = null;
+	Map<Integer, Channel> channels = null;
 	public static ChannelManager getSingleton(){
 		return single;
 	}
 	
 	int outNodeId = 0;	
+	
+	public void setNodeChannels(Map<Integer, Channel> channels){
+		this.channels = channels;
+	}
 	private ChannelManager(){
-		channels = new HashMap<Integer, Channel>();
+		//channels = new HashMap<Integer, Channel>();
 	}
 	
 	public void addChannel(Channel  ch){

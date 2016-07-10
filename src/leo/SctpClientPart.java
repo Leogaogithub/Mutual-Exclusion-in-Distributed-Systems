@@ -1,22 +1,31 @@
 package leo;
 
 import java.io.*;
+
 import java.net.*;
 
 
 import com.sun.nio.sctp.*;
-public class SctpClientPart 
+import leo.Message.*;
+
+public class SctpClientPart extends Thread
 {	
-	NodeInfor serverInfo;	
+	NodeInfor serverInfo;
+	Node locaNode;
 	//int localPort = 5002;	
 	String serverAddress = "";
 	SctpChannel sctpChannel;
 	
-	public SctpClientPart(NodeInfor serInfo){		
+	public SctpClientPart(Node locaNode, NodeInfor serInfo){
+		this.locaNode = locaNode;
 		serverInfo = serInfo;				
 		serverAddress = serverInfo.hostName;
 		//serverAddress = "127.0.0.1";//delete		
 	}
+	
+	public void run() {
+		connectChanel();		
+	}	
 	
 	private void connect(){
 		//Create a socket address for  server at net01 at port 5000
@@ -47,36 +56,13 @@ public class SctpClientPart
 	public void connectChanel(){		
 		connect();
 		//SharedData.getSingleton().updateIsConnected(serverInfo.nodeId);
-		LogWriter.getSingle().log("connectChanel() in the SctpClientPart");
+		
 		SCTPChannel ch = new SCTPChannel(serverInfo.nodeId, sctpChannel);
-		ChannelManager.getSingleton().addChannel(ch);
+		Message msg = MessageFactory.getSingleton().getMessageNodeID(locaNode.localInfor.nodeId);
+		ch.send(msg.toString());
+		ChannelManager.getSingleton().addChannel(ch);	
+		LogWriter.getSingle().log("connectChanel() in the SctpClientPart");
 		new SctpRecieverThread(ch).start();
 	}
 
-	
-	public static void main(String args[])
-	{
-		String message = "hello world, this is from sctpclient part";
-		String serverName= "127.0.0.1";
-		int serverPort = 5006;
-		NodeInfor serInfo = new NodeInfor(1,serverName, serverPort, serverName);
-		SctpClientPart SctpClientObj = new SctpClientPart(serInfo);
-		SctpClientObj.connectChanel();	
-		int i = 0;
-		boolean active = true;
-		while(active){			
-			message = String.valueOf(i);			
-			//SctpClientObj.send(message);
-			i= i+1;
-			System.out.println(i);			
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {				
-				e.printStackTrace();
-				//SctpClientObj.close();
-				active = false;
-			}
-		}
-		
-	}
 }

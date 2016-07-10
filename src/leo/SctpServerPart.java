@@ -5,7 +5,7 @@ import java.net.*;
 import com.sun.nio.sctp.*;
 import leo.Message.*;
 
-public class SctpServerPart 
+public class SctpServerPart extends Thread
 {
 	SctpServerChannel sctpServerChannel = null;
 	Node localNode = null;		
@@ -28,6 +28,10 @@ public class SctpServerPart
 			ex.printStackTrace();
 		}		
 	}
+	
+	public void run() {
+		connectAllChannelFromSeverToClient();		
+	}	
 	
 	public void connectAllChannelFromSeverToClient(){
 		init();
@@ -54,7 +58,7 @@ public class SctpServerPart
 					Message msg = MessageParser.getSingleton().parser(message);
 					if(msg instanceof MessageNodeID){						
 						SCTPChannel ch = new SCTPChannel(((MessageNodeID) msg).nodeId, sctpChannel);
-						ChannelManager.getSingleton().addChannel(ch);
+						ChannelManager.getSingleton().addChannel(ch);						
 						connected = true;
 						LogWriter.getSingle().log("connect nodeID: ("+ String.valueOf(ch.channelID)+") Client in connectAllClient() in SctpServerPart");
 						new SctpRecieverThread(ch).start();
@@ -74,7 +78,7 @@ public class SctpServerPart
 		Parser.getSingleton().setLocalNodeId(1);
 		Node mynode = Parser.getSingleton().parseFile("config.txt");
 		SctpServerPart SctpServerObj = new SctpServerPart(mynode);		
-		SctpServerObj.connectAllChannel();
+		//SctpServerObj.connectAllChannel();
 	}
 
 }

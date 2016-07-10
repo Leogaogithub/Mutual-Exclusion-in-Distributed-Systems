@@ -42,10 +42,8 @@ public class Controller{
 	/**
 	 * init the TCP server and client
 	 */
-	public void initTCPTransport(){	
-		
-		this.initTCPServerListener();	
-		
+	public void initTCPTransport(){			
+		this.initTCPServerListener();			
 		try {
 			this.connectTCPChannel(myNode);
 		} catch (InterruptedException e) {
@@ -56,7 +54,9 @@ public class Controller{
 	
 	
 	public void initSCTPTransport(){	
-		
+		ChannelManager.getSingleton().setNodeChannels(myNode.channelRemoteMap);
+		SCTPSubSystem sctpSubsys = new SCTPSubSystem(myNode);
+		sctpSubsys.startSystem();		
 	}
 	
 	/**
@@ -77,15 +77,7 @@ public class Controller{
 
 	
 
-	public void connectSCTPChannel(Node myNode){
-		for(NodeInfor nb: myNode.neighbors.values()){
-			if(UtilityTool.preIsClient(myNode.localInfor.nodeId, nb.nodeId)){				
-				SctpClientPart client = new SctpClientPart(nb);
-				client.connectChanel();	
-			}
-		}
-		
-	}
+	
 	
 	/**
 	 * start to listen connection request from node with larger id

@@ -1,8 +1,8 @@
 package leo;
-public class Mytest {	
+public class Mytest2 {	
 	
 	public static void main(String[] args) {
-		int nodeId = 0;
+		int nodeId = 2;
 		String name="config.txt";  //linux
 		String currentDir = System.getProperty("user.dir");
 		String prefixName = name.substring(0, name.length()-4)+"-" + String.valueOf(nodeId);
@@ -10,7 +10,7 @@ public class Mytest {
 		LogWriter.getSingle().clear();		
 		OutputWriter.getSingle().open(prefixName+".out");
 		OutputWriter.getSingle().clear();
-		Mytest test = new Mytest();
+		Mytest2 test = new Mytest2();
 		//System.out.println(currentDir);
 		
 		Controller controller1 = new Controller(nodeId,"sctp",name);

@@ -20,7 +20,8 @@ public class SctpRecieverThread extends Thread {
 		}
 	}	
 	
-	public void handler(String msg){		
+	public void handler(String msg){
+		System.out.println(msg.toString()+getSuffix());
 		LogWriter.getSingle().log(msg.toString()+getSuffix());				
 	}
 	
