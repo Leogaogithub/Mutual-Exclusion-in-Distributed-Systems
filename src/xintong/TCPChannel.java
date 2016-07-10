@@ -9,7 +9,12 @@ import leo.Node;
 
 public class TCPChannel extends Channel {
 	
+	public TCPChannel(int channelID) {
+		super(channelID);
+	}
+
 	public int remoteNodeID;
+	public Socket socket;
 	public Socket getSocket() {
 		return socket;
 	}
@@ -18,12 +23,7 @@ public class TCPChannel extends Channel {
 		this.socket = socket;
 	}
 
-	public TCPChannel(Node local,int remoteID){
-		super.local=local;
-		super.channelID=remote.localInfor.nodeId;
-		this.remoteNodeID=remoteID;
-	}
-	
+
 	public void send(String msg){
 		try {
 			PrintWriter outToServer = new PrintWriter(socket.getOutputStream(),true);
@@ -31,6 +31,18 @@ public class TCPChannel extends Channel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	public String receive() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
 		
 	}
 	

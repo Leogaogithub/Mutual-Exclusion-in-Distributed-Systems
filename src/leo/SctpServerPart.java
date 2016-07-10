@@ -71,8 +71,8 @@ public class SctpServerPart
 
 	public static void main(String args[])
 	{	
-		Paser.getSingleton().setLocalNodeId(1);
-		Node mynode = Paser.getSingleton().parseFile("config.txt");
+		Parser.getSingleton().setLocalNodeId(1);
+		Node mynode = Parser.getSingleton().parseFile("config.txt");
 		SctpServerPart SctpServerObj = new SctpServerPart(mynode);		
 		SctpServerObj.connectAllChannel();
 	}

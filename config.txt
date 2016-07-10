@@ -1,7 +1,6 @@
 # s i x g l o b a l p a r a m e t e r s ( s e e above )
 5 20 10 1000
 
-0 dc03 5022
-1 dc04 5023
-2 dc05 5024
-
+0 localhost 5022
+1 localhost 5023
+2 localhost 5024

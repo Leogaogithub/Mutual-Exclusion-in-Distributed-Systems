@@ -15,8 +15,8 @@ public class Mytest {
 		Mytest test = new Mytest();
 		String name = "config.txt";
 		int nodeId = 1;
-		Paser.getSingleton().setLocalNodeId(nodeId);		
-		Node myNode = Paser.getSingleton().parseFile(name);				
+		Parser.getSingleton().setLocalNodeId(nodeId);		
+		Node myNode = Parser.getSingleton().parseFile(name);				
 		String prefixName = name.substring(0, name.length()-4)+String.valueOf(nodeId);
 		LogWriter.getSingle().open(prefixName+".log");
 		leo.LogWriter.getSingle().setPrefix(String.valueOf(nodeId)+":");

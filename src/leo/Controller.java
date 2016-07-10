@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import xintong.TCPChannel;
 
-import Leo.NodeInfo;
-import MyChannel.SctpClientPart;
-import MyUtil.ConfigExpert;
 
 import xintong.MessageReceiveService;
 import xintong.TCPClientHandler;
@@ -17,17 +15,36 @@ public class Controller{
 	
 
 	public Node  myNode;	
-	String hostname;
-	
-	public Controller(String hostname){
-		this.hostname=hostname;
+	public String filename;
+	public String transport;
+	public int nodeID;
+	public Controller(int nodeID,String transport,String configFile){
+
+		this.transport=transport;
+		this.filename=configFile;
+		this.nodeID=nodeID;
+
 	}
 
 	
 	
 	public void start(){		
 		//parse config file
+		Parser.getSingleton().setLocalNodeId(nodeID);
+		this.myNode=Parser.getSingleton().parseFile(filename);
+		if(transport.toLowerCase().equals("tcp"))
+			initTCPTransport();
+		else
+			initSCTPTransport();
+
+	}
+	
+	/**
+	 * init the TCP server and client
+	 */
+	public void initTCPTransport(){	
 		
+		this.initTCPServerListener();	
 		
 		try {
 			this.connectTCPChannel(myNode);
@@ -35,16 +52,18 @@ public class Controller{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
 	
+	
+	public void initSCTPTransport(){	
 		
 	}
 	
 	/**
 	 * init the transport layer service
 	 */
-	public void initTransportService(){
-
+	private void initTCPServerListener(){
+		
 		TCPServerListener server = null;
 		try {
 			server = new TCPServerListener(myNode.localInfor.port,myNode);
@@ -55,6 +74,7 @@ public class Controller{
 		Thread thread = new Thread(server);
 		thread.start();
 	}
+
 	
 
 	public void connectSCTPChannel(Node myNode){
@@ -70,21 +90,20 @@ public class Controller{
 	/**
 	 * start to listen connection request from node with larger id
 	 */
-	public void connectTCPChannel(Node myNode) throws InterruptedException{
+	private void connectTCPChannel(Node myNode) throws InterruptedException{
 		//return socket to node with higher ID
-		for(Channel c:myNode.channelList){
+		for(NodeInfor remoteNode:myNode.neighbors.values()){
 				int try_num=0;
-				Node n=c.remote;
 				//compare remote node id with local 
-				if(n.localInfor.nodeId>myNode.localInfor.nodeId){			
+				if(remoteNode.nodeId>myNode.localInfor.nodeId){			
 					continue;
 				}
 				Socket clientSocket = null;
 				while(clientSocket==null){
 					try_num++;
 					try {
-						clientSocket = new Socket(n.localInfor.hostName,n.localInfor.port);
-						System.out.println(n.localInfor.hostName+":"+n.localInfor.port+" established successively");
+						clientSocket = new Socket(remoteNode.hostName,remoteNode.port);
+						System.out.println(remoteNode.hostName+":"+remoteNode.port+" established successively");
 						
 					} catch (UnknownHostException e) {
 						// TODO Auto-generated catch block
@@ -97,7 +116,11 @@ public class Controller{
 					Thread.sleep(seconds_to_wait*20);
 					
 				}
-				c.socket=clientSocket;
+				
+				Channel tcpChannel = new TCPChannel(remoteNode.nodeId);
+				myNode.addChannel(tcpChannel);
+				
+				
 				PrintWriter outToServer = null;
 				try {
 					outToServer = new PrintWriter(clientSocket.getOutputStream(),true);
@@ -109,7 +132,7 @@ public class Controller{
 				
 				//start new thread to listen the socket;
 				new Thread(
-						new TCPClientHandler(clientSocket,c.channelID)
+						new TCPClientHandler(clientSocket,remoteNode.nodeId)
 						).start();  //should use start
 				
 					

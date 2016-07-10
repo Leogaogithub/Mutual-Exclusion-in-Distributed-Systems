@@ -1,13 +1,13 @@
 package leo;
 import java.util.Vector;
 
-public class Paser {
+public class Parser {
 	public int localNodeId = 0;
-	static Paser single = new Paser();
-	private Paser(){ 		
+	private static Parser single = new Parser();
+	private Parser(){ 		
 	}
 	
-	public static Paser getSingleton(){
+	public static Parser getSingleton(){
 		return single;
 	}	
 	
@@ -38,7 +38,11 @@ public class Paser {
 				}else if(part2linesNum < node.numNodes){
 					NodeInfor nodeInfor = new NodeInfor();
 					nodeInfor.nodeId = Integer.parseInt(args[0]);
-					nodeInfor.hostName = args[1]+".utdallas.edu";
+					if(args[1].equals("localhost"))
+						nodeInfor.hostName ="localhost";
+					else
+						nodeInfor.hostName = args[1]+".utdallas.edu";
+					
 					nodeInfor.port = Integer.parseInt(args[2]);
 					if(nodeInfor.nodeId == localNodeId){
 						node.setLocalInfo(nodeInfor);
@@ -58,8 +62,8 @@ public class Paser {
 	 */
 	public static void main(String[] args) {
 		String name = "config.txt";
-		Paser.getSingleton().setLocalNodeId(1);
-		Node node = Paser.getSingleton().parseFile(name);
+		Parser.getSingleton().setLocalNodeId(1);
+		Node node = Parser.getSingleton().parseFile(name);
 		System.out.println("gao");
 	}
 
