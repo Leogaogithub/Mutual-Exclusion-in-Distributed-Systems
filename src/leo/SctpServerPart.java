@@ -58,7 +58,7 @@ public class SctpServerPart extends Thread
 					Message msg = MessageParser.getSingleton().parser(message);
 					if(msg instanceof MessageNodeID){						
 						SCTPChannel ch = new SCTPChannel(((MessageNodeID) msg).nodeId, sctpChannel);
-						ChannelManager.getSingleton().addChannel(ch);						
+						localNode.addChannel(ch);						
 						connected = true;
 						LogWriter.getSingle().log("connect nodeID: ("+ String.valueOf(ch.channelID)+") Client in connectAllClient() in SctpServerPart");
 						new SctpRecieverThread(ch).start();
@@ -72,13 +72,4 @@ public class SctpServerPart extends Thread
 		}
 		LogWriter.getSingle().log("finished connectAllClient() in SctpServerPart");
 	}	
-
-	public static void main(String args[])
-	{	
-		Parser.getSingleton().setLocalNodeId(1);
-		Node mynode = Parser.getSingleton().parseFile("config.txt");
-		SctpServerPart SctpServerObj = new SctpServerPart(mynode);		
-		//SctpServerObj.connectAllChannel();
-	}
-
 }

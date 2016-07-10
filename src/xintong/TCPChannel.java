@@ -25,13 +25,15 @@ public class TCPChannel extends Channel {
 
 
 	public void send(String msg){
+	
+		PrintWriter outToServer=null;
 		try {
-			PrintWriter outToServer = new PrintWriter(socket.getOutputStream(),true);
+			outToServer = new PrintWriter(socket.getOutputStream(),true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		outToServer.println(msg);
 	}
 
 	@Override

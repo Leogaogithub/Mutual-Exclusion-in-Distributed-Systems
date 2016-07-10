@@ -12,15 +12,13 @@ public class SctpClientPart extends Thread
 {	
 	NodeInfor serverInfo;
 	Node locaNode;
-	//int localPort = 5002;	
 	String serverAddress = "";
 	SctpChannel sctpChannel;
 	
 	public SctpClientPart(Node locaNode, NodeInfor serInfo){
 		this.locaNode = locaNode;
 		serverInfo = serInfo;				
-		serverAddress = serverInfo.hostName;
-		//serverAddress = "127.0.0.1";//delete		
+		serverAddress = serverInfo.hostName;				
 	}
 	
 	public void run() {
@@ -28,16 +26,11 @@ public class SctpClientPart extends Thread
 	}	
 	
 	private void connect(){
-		//Create a socket address for  server at net01 at port 5000
 		SocketAddress socketAddress = new InetSocketAddress(serverAddress,serverInfo.port);
-		//Open a channel. NOT SERVER CHANNEL
 		boolean connected = false;
 		while(!connected){
 			try {
 				sctpChannel = SctpChannel.open();
-				//Bind the channel's socket to a local port. Again this is not a server bind
-				//sctpChannel.bind(new InetSocketAddress(localPort));
-				//Connect the channel's socket to  the remote server
 				sctpChannel.connect(socketAddress);
 				connected = true;
 			} catch (IOException e) {			
@@ -54,13 +47,11 @@ public class SctpClientPart extends Thread
 	}
 	
 	public void connectChanel(){		
-		connect();
-		//SharedData.getSingleton().updateIsConnected(serverInfo.nodeId);
-		
+		connect();				
 		SCTPChannel ch = new SCTPChannel(serverInfo.nodeId, sctpChannel);
 		Message msg = MessageFactory.getSingleton().getMessageNodeID(locaNode.localInfor.nodeId);
 		ch.send(msg.toString());
-		ChannelManager.getSingleton().addChannel(ch);	
+		locaNode.addChannel(ch);	
 		LogWriter.getSingle().log("connectChanel() in the SctpClientPart");
 		new SctpRecieverThread(ch).start();
 	}

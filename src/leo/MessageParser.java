@@ -27,11 +27,4 @@ public class MessageParser {
 			return null;
 		}
 	}
-	
-	public static void main(String[] args) {
-		String smsg = "app1 2 3 4 5 6 stampend leol o l o";
-		Message msg = MessageParser.getSingleton().parser(smsg);
-		System.out.println(msg.toString());
-	}
-
 }

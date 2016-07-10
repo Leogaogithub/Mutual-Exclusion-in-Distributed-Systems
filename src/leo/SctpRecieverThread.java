@@ -1,34 +1,29 @@
 package leo;
 
+import xintong.MessageReceiveService;
+
 public class SctpRecieverThread extends Thread {
 	Channel channel = null;
 	public SctpRecieverThread(Channel channel){
 		this.channel = channel;		
-	}
-	
-	private String getSuffix(){
-		String res = " ";
-		res += " from "+ String.valueOf(channel.channelID);
-		return res;
 	}
 
 	public void run() {
 		boolean runed = true;
 		while(runed){			
 			String message = channel.receive();	
-			handler(message);					
+			if(!message.equalsIgnoreCase("")){
+				MessageReceiveService.getInstance().receive(message, channel.channelID);
+			}else{
+				runed = false;
+				LogWriter.getSingle().log("SctpRecieverThread(" + channel.channelID +")exit");
+			}
+			//handler(message);					
 		}
 	}	
 	
 	public void handler(String msg){
-		System.out.println(msg.toString()+getSuffix());
-		LogWriter.getSingle().log(msg.toString()+getSuffix());				
-	}
-	
-	public static void main(String arg[]){
-		String mm = "a;b;c";
-		String c[] = mm.split(";");
-		System.out.println(mm);		
-	    
+		System.out.println(msg.toString());
+		LogWriter.getSingle().log(msg.toString());				
 	}
 }

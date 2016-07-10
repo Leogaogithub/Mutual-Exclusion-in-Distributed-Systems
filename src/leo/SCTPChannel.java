@@ -30,8 +30,7 @@ public class SCTPChannel extends Channel{
 		return receive(channel);
 	}
 	
-	public static void send(SctpChannel sctpChannel, String message){
-		
+	public static void send(SctpChannel sctpChannel, String message){		
 		try
 		{
 			ByteBuffer byteBuffer = ByteBuffer.allocate(MESSAGE_SIZE);	
@@ -50,16 +49,11 @@ public class SCTPChannel extends Channel{
 	}
 	
 	public static String receive(SctpChannel sctpChannel){
-		String message = "";		
+		String message = null;		
 		try
 		{
 			ByteBuffer byteBuffer = ByteBuffer.allocate(MESSAGE_SIZE);
 			MessageInfo messageInfo = sctpChannel.receive(byteBuffer,null,null);
-			//byteBuffer.flip();
-			//Just seeing what gets stored in messageInfo
-			System.out.println(messageInfo);
-			//Converting bytes to string. This looks nastier than in TCP
-			//So better use a function call to write once and forget it :)
 			message = UtilityTool.byteToString(byteBuffer, MESSAGE_SIZE);			
 		}
 		catch(IOException ex)

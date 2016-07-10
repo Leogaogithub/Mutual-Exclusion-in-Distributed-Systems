@@ -24,7 +24,6 @@ public class TCPServerListener implements Runnable
 	public void run()
 	{
 			System.out.println("TCP sever starts listening on"+port);
-		
 			while(true){
 				Socket socket = null;
 				try {
@@ -46,6 +45,11 @@ public class TCPServerListener implements Runnable
 				int channelID=-1;
 				if(input.startsWith("NODEID:"))
 					channelID=input.charAt(7)-'0';
+				
+				TCPChannel tcpChannel = new TCPChannel(channelID);
+				tcpChannel.setSocket(socket);
+				local.addChannel(tcpChannel);
+				System.out.println("add channel socket"+channelID+"successfully!");
 				
 				new Thread(
 						new TCPClientHandler(socket,channelID)

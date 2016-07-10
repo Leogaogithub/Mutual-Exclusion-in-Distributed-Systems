@@ -2,6 +2,7 @@ package xintong;
 
 import java.io.IOException;
 
+import leo.Channel;
 import leo.Node;
 
 public class MessageSenderService implements IsendMessage{
@@ -16,11 +17,11 @@ public class MessageSenderService implements IsendMessage{
 	
 	@Override
 	public void send(String message, int channelID) {
-		
-		
-		
+		System.out.println("channelremote size"+node.channelRemoteMap.size());	
+		Channel channel = node.channelRemoteMap.get(channelID);
+		channel.send(message);
+			
 	}
-
 
 
 }
