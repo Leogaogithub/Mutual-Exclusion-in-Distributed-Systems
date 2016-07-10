@@ -1,5 +1,7 @@
 package leo.Message;
 
+import leo.MessageParser;
+
 public class MessageNodeID extends Message {
 	public int nodeId ;
 	public MessageNodeID(int id){
@@ -9,7 +11,7 @@ public class MessageNodeID extends Message {
 	
 	public String toString(){
 		String res = type;
-		res += String.valueOf(nodeId);
+		res += ":" + String.valueOf(nodeId)+ ";";
 		return res;
 	}
 }

@@ -1,5 +1,7 @@
 package leo.Message;
 
+import leo.MessageParser;
+
 public class MessageOk extends Message {
 
 	public MessageOk(){
@@ -7,7 +9,7 @@ public class MessageOk extends Message {
 	}
 	
 	public String toString(){
-		String res = type;
+		String res = type + ":" + type;		
 		return res;
 	}
 

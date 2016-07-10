@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import Leo.NodeInfo;
+import MyChannel.SctpClientPart;
+import MyUtil.ConfigExpert;
+
 import xintong.MessageReceiveService;
 import xintong.TCPClientHandler;
 import xintong.TCPServerListener;
@@ -53,7 +57,15 @@ public class Controller{
 	}
 	
 
-	
+	public void connectSCTPChannel(Node myNode){
+		for(NodeInfor nb: myNode.neighbors.values()){
+			if(UtilityTool.preIsClient(myNode.localInfor.nodeId, nb.nodeId)){				
+				SctpClientPart client = new SctpClientPart(nb);
+				client.connectChanel();	
+			}
+		}
+		
+	}
 	
 	/**
 	 * start to listen connection request from node with larger id

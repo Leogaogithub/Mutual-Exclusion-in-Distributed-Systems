@@ -1,5 +1,6 @@
 package leo;
 import java.util.HashMap;
+import java.util.List;
 
 public class ChannelManager {
 	static ChannelManager single = new ChannelManager();	
@@ -26,15 +27,15 @@ public class ChannelManager {
 		ch.send(message);
 	}
 	
-	public void sendToNeighbors(String message){
+	public void broadcast(String message){
 		for(Channel ch : channels.values()){
 			ch.send(message);
 		}
 	}
 	
-	public void startAllRecieverThread(){
-		for(Channel ch : channels.values()){
-			//new SctpRecieverThread(ch).start();
+	public void multicast(String message, List<Integer> desList){
+		for(int nbid: desList){
+			send(nbid, message);
 		}
 	}
 	

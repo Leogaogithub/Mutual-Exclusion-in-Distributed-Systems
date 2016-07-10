@@ -15,7 +15,7 @@ public class Paser {
 		return localNodeId;
 	}
 	
-	public void setNodeId(int id){
+	public void setLocalNodeId(int id){
 		localNodeId = id;
 	}	
 	
@@ -58,6 +58,7 @@ public class Paser {
 	 */
 	public static void main(String[] args) {
 		String name = "config.txt";
+		Paser.getSingleton().setLocalNodeId(1);
 		Node node = Paser.getSingleton().parseFile(name);
 		System.out.println("gao");
 	}

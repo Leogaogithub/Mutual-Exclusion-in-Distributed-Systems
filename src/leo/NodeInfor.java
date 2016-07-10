@@ -18,4 +18,10 @@ public class NodeInfor {
 		this.hostName = hostName;
 		this.ipAddress = ipAddress;
 	}
+	
+	NodeInfor(int id, String hostName, int port){
+		this.nodeId = id;
+		this.port = port;
+		this.hostName = hostName;		
+	}
 }

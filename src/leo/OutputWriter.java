@@ -6,9 +6,11 @@ public class OutputWriter extends MyWriter{
 		return instance;
 	}		
 	
-	public void reset(){
-		prefix = "";
-	}
+	public void open(String name){
+		clear();
+		super.open(name);
+	}	
+
 	public static void main(String[] args) {
 		String name = "test.out";
 		OutputWriter.getSingle().open(name, 1);

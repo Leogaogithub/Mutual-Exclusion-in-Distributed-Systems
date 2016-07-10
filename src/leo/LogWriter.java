@@ -1,15 +1,20 @@
 package leo;
+
 public class LogWriter extends MyWriter{
 	private static LogWriter instance =  new LogWriter();		
 
 	public  static LogWriter getSingle(){
 		return instance;
-	}		
+	}
+	
+	public void open(String name){
+		clear();
+		super.open(name);
+	}	
 	
 	public static void main(String[] args) {
 		String name = "test.out";
-		LogWriter.getSingle().open(name, 1);
-		LogWriter.getSingle().clear();
+		LogWriter.getSingle().open(name);		
 		LogWriter.getSingle().write(name.substring(0,2));
 	}
 	

@@ -5,15 +5,15 @@ import java.io.RandomAccessFile;
 
 public class MyWriter {
 	private RandomAccessFile logFile = null;
-	String prefix = "";
+	String prefix = null;
 	
+	void setPrefix(String prefix){
+		this.prefix = prefix;
+	}
 	//private String rootPath = "";
-	public void open(String name, int nodeId){
+	public void open(String name){
 		try {
-			logFile = new RandomAccessFile(name, "rw");
-			//int id =  ConfigExpert.getSingleton().getLocalNodeId();
-			prefix = String.valueOf(nodeId);
-			prefix += ":";
+			logFile = new RandomAccessFile(name, "rw");						
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
 		}		
@@ -29,7 +29,7 @@ public class MyWriter {
 	
 	public void log(String str){
 		synchronized(this){
-			write(prefix);
+			if(prefix!=null) write(prefix);			
 			write(str);
 			write("\n");
 		}
