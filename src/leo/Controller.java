@@ -6,8 +6,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import xintong.TCPChannel;
 
-
-import xintong.MessageReceiveService;
 import xintong.TCPClientHandler;
 import xintong.TCPServerListener;
 
