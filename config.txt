@@ -1,6 +1,8 @@
 # s i x g l o b a l p a r a m e t e r s ( s e e above )
-3 20 10 1000
+5 20 10 1000
 
 0 localhost 5022
 1 localhost 5023
 2 localhost 5024
+3 localhost 5025
+4 localhost 5026
