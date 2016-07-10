@@ -8,6 +8,8 @@ import xintong.TCPChannel;
 
 import xintong.TCPClientHandler;
 import xintong.TCPServerListener;
+import xintong.TestReceiveApplication;
+import xintong.TestSendApplication;
 
 public class Controller{
 	
@@ -34,7 +36,14 @@ public class Controller{
 			initTCPTransport();
 		else
 			initSCTPTransport();
-
+		
+		
+		
+		
+		
+		
+		TestReceiveApplication testreceive = new TestReceiveApplication(myNode.localInfor.nodeId);
+		TestSendApplication testsend = new TestSendApplication(myNode,10);
 	}
 	
 	/**
@@ -52,6 +61,13 @@ public class Controller{
 		}
 	}
 	
+	public boolean isAllSocketUp(Node node){
+		for(Socket socket:node.channelRemoteMap.values().){
+			if(socket==null)
+				return false;
+		}
+		return true;
+	}
 	
 	public void initSCTPTransport(){	
 		

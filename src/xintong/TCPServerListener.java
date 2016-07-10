@@ -24,7 +24,6 @@ public class TCPServerListener implements Runnable
 	public void run()
 	{
 			System.out.println("TCP sever starts listening on"+port);
-		
 			while(true){
 				Socket socket = null;
 				try {
