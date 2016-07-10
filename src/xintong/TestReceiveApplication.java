@@ -5,11 +5,14 @@ public class TestReceiveApplication implements IreceiveMessage {
 	int nodeid;
 	public TestReceiveApplication(int nodeid){
 
-		MessageReceiveService.getInstance().register(this);
+		
 		this.nodeid=nodeid;
 	}
 	
-	
+	public void listen(){
+		MessageReceiveService.getInstance().register(this);
+		System.out.println("register to messagereceiveservices");
+	}
 	
 
 	@Override

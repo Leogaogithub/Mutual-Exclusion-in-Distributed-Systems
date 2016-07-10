@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import xintong.MessageReceiveService;
+import xintong.MessageSenderService;
 import xintong.TCPChannel;
 
 import xintong.TCPClientHandler;
@@ -37,13 +40,44 @@ public class Controller{
 		else
 			initSCTPTransport();
 		
+		while(!isAllSocketUp(myNode)){
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
+		try {
+			MessageReceiveService.getInstance().connectNode(myNode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		try {
+			MessageSenderService.getInstance().connectNode(myNode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		
+	
 		
 		TestReceiveApplication testreceive = new TestReceiveApplication(myNode.localInfor.nodeId);
+		testreceive.listen();
+		
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		TestSendApplication testsend = new TestSendApplication(myNode,10);
+		testsend.sendTest();
+		
 	}
 	
 	/**
@@ -62,11 +96,10 @@ public class Controller{
 	}
 	
 	public boolean isAllSocketUp(Node node){
-		for(Socket socket:node.channelRemoteMap.values().){
-			if(socket==null)
-				return false;
-		}
-		return true;
+		if(node.channelRemoteMap.size() == node.neighbors.size()){
+			return true;
+		}		
+		return false;
 	}
 	
 	public void initSCTPTransport(){	
@@ -131,10 +164,11 @@ public class Controller{
 					
 				}
 				
-				Channel tcpChannel = new TCPChannel(remoteNode.nodeId);
+				TCPChannel tcpChannel = new TCPChannel(remoteNode.nodeId);
+				tcpChannel.setSocket(clientSocket);
+
 				myNode.addChannel(tcpChannel);
-				
-				
+	
 				PrintWriter outToServer = null;
 				try {
 					outToServer = new PrintWriter(clientSocket.getOutputStream(),true);

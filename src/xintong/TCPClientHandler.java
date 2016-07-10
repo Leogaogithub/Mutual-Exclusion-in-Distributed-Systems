@@ -32,7 +32,7 @@ public class TCPClientHandler implements Runnable{
 				String receivedMsg = null;	
 				while(reader.hasNextLine()){
 					receivedMsg = reader.nextLine();
-					System.out.println("Clinet handler received msg:"+receivedMsg);
+					System.out.println("TCPClient receives message:"+receivedMsg);
 					MessageReceiveService.getInstance().receive(receivedMsg, destChannelID);
 			
 				}
