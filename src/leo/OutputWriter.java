@@ -13,7 +13,7 @@ public class OutputWriter extends MyWriter{
 
 	public static void main(String[] args) {
 		String name = "test.out";
-		OutputWriter.getSingle().open(name, 1);
+		OutputWriter.getSingle().open(name);
 		OutputWriter.getSingle().clear();
 		OutputWriter.getSingle().write(name.substring(0,2));
 	}
