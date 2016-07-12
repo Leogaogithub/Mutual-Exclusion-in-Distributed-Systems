@@ -9,8 +9,9 @@ import java.net.UnknownHostException;
 import lamportAlgorithm.ChannelManager;
 
 import application.TestReceiveApplication;
+import application.TestReceiveApplicationWithClock;
 import application.TestSendApplication;
-
+import application.TestSendApplicationWithClock;
 import channelTranportLayer.SCTPSubSystem;
 import channelTranportLayer.TCPChannel;
 import channelTranportLayer.TCPClientHandler;
@@ -72,7 +73,7 @@ public class Controller{
 		
 	
 		
-		TestReceiveApplication testreceive = new TestReceiveApplication(myNode.localInfor.nodeId);
+		TestReceiveApplicationWithClock testreceive = new TestReceiveApplicationWithClock(myNode.localInfor.nodeId);
 		testreceive.listen();
 		
 		try {
@@ -82,7 +83,7 @@ public class Controller{
 			e.printStackTrace();
 		}
 		
-		TestSendApplication testsend = new TestSendApplication(myNode,10);
+		TestSendApplicationWithClock testsend = new TestSendApplicationWithClock(myNode,10);
 		testsend.sendTest();
 		
 	}

@@ -9,7 +9,7 @@ import channelTranportLayer.Channel;
 
 
 
-public class MessageSenderService implements IsendMessage{
+public class MessageSenderService implements IsendMessage,IsendMessageWithClock{
 	Node node=null;
 	private static MessageSenderService instance = new MessageSenderService();
 	public static MessageSenderService getInstance(){
@@ -25,6 +25,14 @@ public class MessageSenderService implements IsendMessage{
 		Channel channel = node.channelRemoteMap.get(channelID);
 		channel.send(message);
 			
+	}
+	@Override
+	public void send(String message, int channelID, long milliseconds) {
+		System.out.println("channelremote size"+node.channelRemoteMap.size()+"Clock"+milliseconds);	
+		Channel channel = node.channelRemoteMap.get(channelID);
+		channel.send("CLOCK:"+milliseconds+";"+message);
+		
+		
 	}
 
 

@@ -8,10 +8,11 @@ import controllerUnit.Node;
 
 
 
-public class MessageReceiveService {
+public class MessageReceiveService implements IreceiveMessage{
 	Node node=null;
 	private static MessageReceiveService instance = new MessageReceiveService();
 	protected List<IreceiveMessage> listenerList = new CopyOnWriteArrayList<IreceiveMessage>();
+	protected List<IreceiveMessageWithClock> listenerListWithClock = new CopyOnWriteArrayList<IreceiveMessageWithClock>();
 	
 	public static MessageReceiveService getInstance(){		
 		return instance;
@@ -31,10 +32,17 @@ public class MessageReceiveService {
 	 * @param ippaddress
 	 */
 	public  void receive(String msg,int channelID){
-
-		for(IreceiveMessage obj:listenerList){
-			obj.receive(msg, channelID);
+		if(!msg.startsWith("CLOCK:")){
+			for(IreceiveMessage obj:listenerList){
+				obj.receive(msg, channelID);
+			}
+		}else if(msg.startsWith("CLOCK:")){
+			String clock=msg.split(";")[0].substring(6);
+			for(IreceiveMessageWithClock obj:listenerListWithClock){
+				obj.receive(msg, channelID,Long.parseLong(clock));
+			}
 		}
+		
 	}
 	
 	/**
@@ -53,6 +61,13 @@ public class MessageReceiveService {
 		listenerList.remove(obj);
 	}
 
+
+	public void registerWithClock(IreceiveMessageWithClock obj){
+		listenerListWithClock.add(obj);
+	}
 	
+	public void unregisterWithClock(IreceiveMessageWithClock obj){
+		listenerListWithClock.remove(obj);
+	}
 
 }
