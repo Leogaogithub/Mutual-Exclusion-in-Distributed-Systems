@@ -31,7 +31,7 @@ public class MessageReceiveService implements IreceiveMessage{
 	 * @param msg
 	 * @param ippaddress
 	 */
-	public  void receive(String msg,int channelID){
+	public synchronized void receive(String msg,int channelID){
 		if(!msg.startsWith("CLOCK:")){
 			for(IreceiveMessage obj:listenerList){
 				obj.receive(msg, channelID);

@@ -21,7 +21,7 @@ public class TestReceiveApplicationWithClock implements IreceiveMessageWithClock
 
 	@Override
 	public void receive(String message, int channel, long milliseconds) {
-		System.out.println("node "+nodeid+"receives message "+message+"comes from channel"+channel+"clock"+milliseconds);
+		System.out.println("node "+nodeid+"receives message "+message+"comes from channel"+channel+"clock  "+milliseconds);
 		
 	}
 

@@ -15,18 +15,10 @@ public class TestSendApplicationWithClock  {
 	
 
 	public void sendTest(){
-		for(int i=0;i<loop;i++){
-			
-			for(int channelID:node.channelRemoteMap.keySet()){
 
-				System.out.println("Send times"+i+"to channel"+channelID);
-				MessageSenderService.getInstance().send("Hello;",channelID ,System.currentTimeMillis());
-				
-			}
-			
-			
-			
-		}
+				System.out.println(" broad cast to channel");
+				MessageSenderService.getInstance().sendBroadCast("HELLO: from node: "+node.localInfor.nodeId+" at ", System.currentTimeMillis());
+
 	}
 
 

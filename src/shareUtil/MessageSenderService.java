@@ -9,7 +9,7 @@ import channelTranportLayer.Channel;
 
 
 
-public class MessageSenderService implements IsendMessage,IsendMessageWithClock{
+public class MessageSenderService implements IsendMessage,IsendMessageWithClock,IsendMessageMultiCast,IsendMessageBroadCast{
 	Node node=null;
 	private static MessageSenderService instance = new MessageSenderService();
 	public static MessageSenderService getInstance(){
@@ -32,6 +32,24 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock{
 		Channel channel = node.channelRemoteMap.get(channelID);
 		channel.send("CLOCK:"+milliseconds+";"+message);
 		
+		
+	}
+	/**
+	 * multi cast msg to the channels
+	 */
+	public void send(String message, long milliseconds, int[] channels) {
+		for(int i:channels){
+			send(message,i,milliseconds);
+		}
+		
+	}
+	/**
+	 * broad cast msg to all the neigbors' channels
+	 */
+	public void sendBroadCast(String message, long milliseconds) {
+		for(Integer i:node.channelRemoteMap.keySet()){
+			send(message,i,milliseconds);
+		}
 		
 	}
 
