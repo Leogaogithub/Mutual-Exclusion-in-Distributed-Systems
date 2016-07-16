@@ -18,7 +18,7 @@ public abstract class Message {
 	}
 	
 	public String getValue(String attr){
-		String val = "";
+		String val = null;
 		if(attributValues.containsKey(attr)) val = attributValues.get(attr);
 		return val;
 	}
@@ -48,12 +48,14 @@ public abstract class Message {
 	}
 	
 	public String toString(){
-		String keys[] = (String[]) attributValues.keySet().toArray();
+		Object keys[] =  attributValues.keySet().toArray();
+		
 		String res = "";
-		for(String key: keys){
-			String val = attributValues.get(key);
+		for(Object key: keys){
+			String skey = (String) key;
+			String val = attributValues.get(skey);
 			if(val == "") continue;
-			res += key+":" + val + ";";
+			res += skey+":" + val + ";";
 		}		
 		return res;
 	}

@@ -17,13 +17,15 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	TimeStampWithID localRequestStamp; 
     int localId ;
     int numOfNode;
-	public LamportAlgorithm(int numOfNode, int localId){
+    IreceiveMessage application = null;    
+	public LamportAlgorithm(int numOfNode, int localId/*, IreceiveMessage application*/){
 		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
 		pqueue = new PriorityQueue<TimeStampWithID>(numOfNode, comparator);
 		localRequestStamp = new TimeStampWithID(localId, Integer.MAX_VALUE);
 		clock = new LamportLogicalClock();
 		this.localId = localId;
 		this.numOfNode = numOfNode;
+		//this.application = application;
 	}
 	
 	public void receive(String message,int channel){
@@ -31,7 +33,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		clock.receiveAction(msg.getTimpeStamp());
 		String type = msg.getType();
 		if(type==null){
-			// deliver message to application
+			//application.receive(message, channel);
 			return;
 		}
 		int rtimestamp = msg.getTimpeStamp();		
@@ -51,6 +53,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 			handlerReply((MessageReply) msg , channel);
 		}else{
 			// deliver message to application
+			//application.receive(message, channel);
 		}		
 	}
 	
@@ -64,7 +67,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	}
 	
 	private Message preSentMessage(String type){
-		Message msg = (MessageRequest) MessageFactory.getSingleton().createMessage(type);		
+		Message msg = MessageFactory.getSingleton().createMessage(type);		
 		clock.sendAction();
 		int stimeStamp = clock.getValue();
 		msg.setTimpeStamp(stimeStamp);
@@ -90,7 +93,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		msg.setNodeId(localId);		
 		pqueue.add(localRequestStamp);
 		long milliseconds = System.currentTimeMillis(); 
-		MessageSenderService.getInstance().sendBroadCast(msg.toString(), milliseconds);
+		MessageSenderService.getInstance().sendBroadCast(msg.toString());
 		while(true){
 			try {
 				Thread.sleep(500);
@@ -111,8 +114,25 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		pqueue.poll();
 		String type = MessageFactory.getSingleton().typeRelease;
 		Message release = preSentMessage(type);
-		long milliseconds = System.currentTimeMillis(); 
-		MessageSenderService.getInstance().sendBroadCast(release.toString(), milliseconds);			
+		//long milliseconds = System.currentTimeMillis(); 
+		MessageSenderService.getInstance().sendBroadCast(release.toString());			
 	}
-
+	
+	public static void main(String [] arg){
+		// this main is just used for test. it is not the main of the project.
+		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
+		PriorityQueue<TimeStampWithID> pqueue = new PriorityQueue<TimeStampWithID>(20, comparator);
+		
+		for(int i = 1; i < 10; i ++){
+			TimeStampWithID localRequestStamp = new TimeStampWithID(i,i); 
+			pqueue.offer(localRequestStamp);
+			localRequestStamp = new TimeStampWithID(i+2,i); 
+			pqueue.offer(localRequestStamp);
+		}
+		
+		while(!pqueue.isEmpty()){
+			TimeStampWithID xx = pqueue.poll();
+			System.out.println(xx.timeStamp + "," + xx.nodeId);
+		}		
+	}
 }

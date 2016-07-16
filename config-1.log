@@ -2,3 +2,4 @@ connectAllClient() in SctpServerPart
 connectChanel() in the SctpClientPart
 connect nodeID: (2) Client in connectAllClient() in SctpServerPart
 finished connectAllClient() in SctpServerPart
+SctpRecieverThread(2)exit
