@@ -1,6 +1,7 @@
 package demo;
 
 import controllerUnit.Controller;
+import controllerUnit.ControllerRicartDemo;
 import controllerUnit.LogWriter;
 import controllerUnit.OutputWriter;
 
@@ -16,7 +17,7 @@ public class Host3 {
 		LogWriter.getSingle().clear();		
 		OutputWriter.getSingle().open(prefixName+".out");
 		OutputWriter.getSingle().clear();
-		Controller controller1 = new Controller(2,"sctp",configfile);
+		ControllerRicartDemo controller1 = new ControllerRicartDemo(2,"tcp",configfile);
 		controller1.start();
 	}
 

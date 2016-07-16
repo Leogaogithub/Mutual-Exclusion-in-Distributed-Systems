@@ -4,5 +4,3 @@
 0 localhost 5022
 1 localhost 5023
 2 localhost 5024
-3 localhost 5025
-4 localhost 5026
