@@ -1,0 +1,78 @@
+package application;
+
+import controllerUnit.Node;
+import shareUtil.AlgorithmFactory;
+import shareUtil.IMutualExclusiveStrategy;
+
+import java.util.Random;
+
+
+
+/**
+ * Application: The application is responsible for generating critical section requests and then
+executing critical sections on receiving permission from the mutual exclusion service. Model your
+application using the following two parameters: inter-request delay, denoted by d, and cs-execution
+time, denoted by c. The first parameter d denotes the time elapsed between when a node’s current
+request is satisfied and when it generates the next request. The second parameter c denotes the
+time a node spends in its critical section. Assume that both d and c are random variables with
+exponential probability distribution.
+ * @author tongxin
+ *
+ */
+public class Application {
+	
+	public int interRequestDelay;
+	public int csExecutionTimer;
+	public Node node;
+	public Random rand;
+	public Application(Node node){
+		rand = new Random();
+		interRequestDelay=node.meanD;
+		csExecutionTimer=node.meanC;
+		
+		this.node=node;
+	}
+	
+	public void start(){
+		IMutualExclusiveStrategy strategy = AlgorithmFactory.getInstance().getAlgorithm(node, "ricart");
+		System.out.println("numofrequest"+node.numRequest);
+		for(int i=0;i<node.numRequest;i++){
+			try {
+				int t1=nextInterRequestDelay();
+				System.out.println("nextInterRequestDelay"+t1);
+				Thread.sleep(t1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			strategy.csEnter();
+			System.out.println("application enter cs! at "+(i+1)+"times.");
+			try {
+				int t2=nextcsExecutionTimer();
+				System.out.println("nextcsExecutionTimer"+t2);			
+				Thread.sleep(t2);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			strategy.csLeave();
+		
+			System.out.println("application leaves cs!");
+		}
+		
+		
+	}
+	
+	public int nextInterRequestDelay(){
+		
+		return (int) (-interRequestDelay*Math.log(rand.nextDouble()));
+	}
+	
+	public int nextcsExecutionTimer(){
+		return (int) (-csExecutionTimer*Math.log(rand.nextDouble()));
+	}
+	
+
+}
