@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 
 import lamportAlgorithm.ChannelManager;
 
+import application.LeoTestApplication;
 import application.TestReceiveApplication;
 import application.TestReceiveApplicationWithClock;
 import application.TestSendApplication;
@@ -29,6 +30,7 @@ public class Controller{
 	public String filename;
 	public String transport;
 	public int nodeID;
+	 
 	public Controller(int nodeID,String transport,String configFile){
 
 		this.transport=transport;
@@ -73,18 +75,20 @@ public class Controller{
 		
 	
 		
-		TestReceiveApplicationWithClock testreceive = new TestReceiveApplicationWithClock(myNode.localInfor.nodeId);
-		testreceive.listen();
+		//TestReceiveApplicationWithClock testreceive = new TestReceiveApplicationWithClock(myNode.localInfor.nodeId);
+		//testreceive.listen();
 		
+		LeoTestApplication application = new LeoTestApplication(myNode.numNodes, nodeID);
+		application.listen();
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		TestSendApplicationWithClock testsend = new TestSendApplicationWithClock(myNode,10);
-		testsend.sendTest();
+		application.startApplication();
+		//TestSendApplicationWithClock testsend = new TestSendApplicationWithClock(myNode,10);
+		//testsend.sendTest();
 		
 	}
 	

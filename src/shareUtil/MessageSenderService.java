@@ -52,6 +52,12 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock,
 		}
 		
 	}
+	
+	public void sendBroadCast(String message) {
+		for(Integer i:node.channelRemoteMap.keySet()){
+			send(message,i);
+		}	
+	}
 
 
 }

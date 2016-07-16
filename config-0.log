@@ -2,5 +2,5 @@ connectAllClient() in SctpServerPart
 connect nodeID: (1) Client in connectAllClient() in SctpServerPart
 connect nodeID: (2) Client in connectAllClient() in SctpServerPart
 finished connectAllClient() in SctpServerPart
-SctpRecieverThread(1)exit
 SctpRecieverThread(2)exit
+SctpRecieverThread(1)exit

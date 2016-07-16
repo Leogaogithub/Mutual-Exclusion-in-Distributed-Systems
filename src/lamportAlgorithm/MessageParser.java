@@ -1,11 +1,10 @@
 package lamportAlgorithm;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class MessageParser {
-	public String typeOk = "OK";
-	public String typeApp = "APP";
-	public String typeNodeId = "NODEID";
-	
+
+public class MessageParser {	
 	static MessageParser single = new MessageParser();
 	public static MessageParser getSingleton(){
 		return single;
@@ -14,16 +13,17 @@ public class MessageParser {
 		
 	}	
 	
-	public Message parser(String msg){
-		String attributes[] = msg.split(";");
-		if(attributes[0].startsWith(typeOk)){			
-			return MessageFactory.getSingleton().getMessageOk();			
-		}else if(attributes[0].startsWith(typeNodeId)){
-			String values[] = attributes[0].split(":");			
-			int id = Integer.parseInt(values[1]);
-			return MessageFactory.getSingleton().getMessageNodeID(id);
-		}else{
-			return null;
+	public Message parser(String msgstr){
+		Message msg = null;
+		String attributes[] = msgstr.split(";");
+		Map<String, String> attributValues = new HashMap<String, String>();
+		for(String attri: attributes){
+			String keyVal[] = attri.split(":");
+			attributValues.put(keyVal[0], keyVal[1]);
 		}
+		String typeLable = MessageFactory.getSingleton().typeLable;
+		if(!attributValues.containsKey(typeLable)) return null;		
+		msg = MessageFactory.getSingleton().getMessage(attributValues);
+		return msg;		
 	}
 }
