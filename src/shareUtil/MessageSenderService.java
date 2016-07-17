@@ -21,14 +21,14 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock,
 	
 	@Override
 	public void send(String message, int channelID) {
-		System.out.println("channelremote size"+node.channelRemoteMap.size());	
+
 		Channel channel = node.channelRemoteMap.get(channelID);
 		channel.send(message);
 			
 	}
 	@Override
 	public void send(String message, int channelID, long milliseconds) {
-		System.out.println("channelremote size"+node.channelRemoteMap.size()+"Clock"+milliseconds);	
+		
 		Channel channel = node.channelRemoteMap.get(channelID);
 		channel.send("CLOCK:"+milliseconds+";"+message);
 		

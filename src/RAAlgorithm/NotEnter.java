@@ -10,12 +10,21 @@ public class NotEnter extends Status{
 	}
 
 	@Override
-	public void execute() {
+	public synchronized void execute() {
+        
+		while(ricart.isReceiving()){
+			//waiting previous status end.
+			System.out.println("not enter status waiting queue to poll");
+		}
+	
 		while(!ricart.getQueue().isEmpty()){			
 			int tmpid=ricart.getQueue().poll();
 			System.out.println("After leaving cs, forward ok to "+tmpid);
 			sendOkMsg(tmpid);
 		}
+		
+	
+		
 		
 	}
 
@@ -27,17 +36,17 @@ public class NotEnter extends Status{
 			sendOkMsg(channel);
 		}
 		else if(message.method.equals("OK")){
-			
+			System.out.println("In not enter pattern: current received ok:"+ricart.getNumOfOk()+"numofNodes"+ricart.node.numNodes);
 		}
-		
-		
+
 	}
 	
 	public void sendOkMsg(int channel){
-		LamportClock currentClock=ricart.clock;
 		Message OK = MessageFactory.getSingleton().getMessage("OK");
+		currentClock.update();
 		OK.addAVP("TIMESTAMP", currentClock.toString());
 		MessageSenderService.getInstance().send(OK.toString(), channel, System.currentTimeMillis());
+		System.out.println("during idle, reply ok to channel"+channel);
 	}
 
 

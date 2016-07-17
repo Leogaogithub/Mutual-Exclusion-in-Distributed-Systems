@@ -8,11 +8,11 @@ public class LamportClock {
 		clock=1;
 	}
 	
-	public synchronized void update(){
-		clock++;
+	public synchronized int   update(){
+		return clock++;
 	}
 	
-	public void receiveMsg(int time){
+	public synchronized void receiveMsg(int time){
 		clock=Math.max(time, clock)+1;	//need to add one here
 	}
 	

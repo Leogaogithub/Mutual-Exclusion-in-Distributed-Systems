@@ -4,41 +4,49 @@ import shareUtil.MessageSenderService;
 
 public class EnteringCS extends Status{
 
-	
+	LamportClock currentClock;
 	public EnteringCS(Ricart ricart) {
 		super(ricart);
+		currentClock=ricart.clock;
 		// TODO Auto-generated constructor stub
 	}
 
 
 	public void execute() {
-		LamportClock currentClock=ricart.clock;
+
 		Message request = MessageFactory.getSingleton().getMessage("REQUEST");
-		request.addAVP("TIMESTAMP", currentClock.toString());
+		ricart.requestSentClock=currentClock.update();
+		request.addAVP("TIMESTAMP", Integer.toString(ricart.requestSentClock));
 		MessageSenderService.getInstance().sendBroadCast(request.toString(), System.currentTimeMillis());
+		System.out.println("send request to all");
 		
 	}
 
 	
 	public  void receive(Message message, int channel, long milliseconds) {
+		ricart.setReceiving(true);
+
 		ricart.clock.receiveMsg(Integer.parseInt(message.avp.get("TIMESTAMP")));
+		
 		boolean isLargerTS = Integer.parseInt(message.avp.get("TIMESTAMP"))<ricart.requestSentClock;
-		boolean isSameTSLargerID = Integer.parseInt(message.avp.get("TIMESTAMP"))==ricart.requestSentClock && ricart.node.localInfor.nodeId>channel;
+		boolean isSameTSLargerID = (Integer.parseInt(message.avp.get("TIMESTAMP"))==ricart.requestSentClock) && ricart.node.localInfor.nodeId>channel;
 		if(message.method.equals("REQUEST")){
+			System.out.println("node"+ricart.node.localInfor.nodeId+"at requested timestamp"+ricart.requestSentClock+"received request from:"+channel+"with time stamp"+message.avp.get("TIMESTAMP"));
 			if(isLargerTS || isSameTSLargerID){
 				Message OK = MessageFactory.getSingleton().getMessage("OK");
-				OK.addAVP("TIMESTAMP", Integer.toString(ricart.clock.getClock()));
-				System.out.println("Strategy forward ok to "+channel);
+				currentClock.update();
+				OK.addAVP("TIMESTAMP", currentClock.toString());
+				System.out.println("reply ok to "+channel);
 				MessageSenderService.getInstance().send(OK.toString(), channel, System.currentTimeMillis());
 			}else{
 				System.out.println("add request channel id"+channel+"in to queue");
-				ricart.addToRequestQueue(channel);
+				ricart.addToRequestQueue(channel);		
 			}
 		}
 		else if(message.method.equals("OK")){
 			ricart.addNumOfOk();
 			//if all the process has sent ok to me
-			System.out.println("current received ok:"+ricart.getNumOfOk()+"numofNodes"+ricart.node.numNodes);
+			System.out.println("entering status current received ok:"+ricart.getNumOfOk()+"numofNodes "+ricart.node.numNodes+"from "+channel);
 			if(ricart.getNumOfOk()==ricart.node.numNodes-1){
 				//resume the enterCS();
 				System.out.println("try to notify main thread");
@@ -51,9 +59,8 @@ public class EnteringCS extends Status{
 			}
 				
 		}
-		
-
-		
+		//end receiving
+		ricart.setReceiving(false);
 	}
 
 

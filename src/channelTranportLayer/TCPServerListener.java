@@ -42,7 +42,6 @@ public class TCPServerListener implements Runnable
 					e.printStackTrace();
 				}
 				String input=reader.nextLine();
-				System.out.println("received remote notify:"+input);
 				int channelID=-1;
 				if(input.startsWith("NODEID:"))
 					channelID=input.charAt(7)-'0';
@@ -50,7 +49,6 @@ public class TCPServerListener implements Runnable
 				TCPChannel tcpChannel = new TCPChannel(channelID);
 				tcpChannel.setSocket(socket);
 				local.addChannel(tcpChannel);
-				System.out.println("add channel socket"+channelID+"successfully!");
 				
 				new Thread(
 						new TCPClientHandler(socket,channelID)

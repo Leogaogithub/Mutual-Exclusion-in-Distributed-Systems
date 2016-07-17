@@ -17,8 +17,8 @@ public class Host3 {
 		LogWriter.getSingle().clear();		
 		OutputWriter.getSingle().open(prefixName+".out");
 		OutputWriter.getSingle().clear();
-		ControllerRicartDemo controller1 = new ControllerRicartDemo(2,"tcp",configfile);
-		controller1.start();
+		ControllerRicartDemo controller3 = new ControllerRicartDemo(2,"sctp",configfile);
+		controller3.start();
 	}
 
 }

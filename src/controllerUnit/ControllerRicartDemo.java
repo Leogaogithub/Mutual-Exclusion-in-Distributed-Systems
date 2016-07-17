@@ -70,9 +70,7 @@ public class ControllerRicartDemo{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		try {
 			Thread.sleep(6000);
 		} catch (InterruptedException e) {
@@ -80,7 +78,13 @@ public class ControllerRicartDemo{
 			e.printStackTrace();
 		}
 		
-		Application app = new Application(myNode);
+		Application app = new Application(myNode,"lamport");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		app.start();
 
 		

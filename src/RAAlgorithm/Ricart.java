@@ -14,24 +14,34 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	public int[] requestQueue;
 	public Node node;
 	public LamportClock clock;
-	public int requestSentClock;
+	public int requestSentClock=Integer.MAX_VALUE;
 	public Status currentStatus;
+	private Status entering;
+	private Status notEnter;
 	private Queue<Integer> pendingQueue;
 	private int numOfOk;
+	private boolean isReceiving;
+	
+
+
+
+
+	public CorrectVerification verifaction;
 	
 	public Ricart(Node node){
+
 		this.node=node;
+		
+		verifaction=new CorrectVerification("algorithmTest"+node.localInfor.nodeId);
 		requestQueue=new int[node.numNodes];
 		this.clock=new LamportClock();
-		pendingQueue=new PriorityQueue<>();
-		currentStatus=new NotEnter(this);
+		this.entering=new EnteringCS(this);
+		this.notEnter=new NotEnter(this);
+		currentStatus=notEnter;
+		pendingQueue=new PriorityBlockingQueue<>();  //impronve to keep thread safe ,when entering status is adding and notenter is poll
+	
 		MessageReceiveService.getInstance().registerWithClock(this);
-		try {
-			Thread.sleep(6000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 	}
 	
@@ -40,17 +50,21 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 		this.pendingQueue.add(processid);
 	}
 	
+	public void changeToEntering(){
+		this.currentStatus=this.entering;
+	}
+	public void changeToNotEntering(){
+		this.currentStatus=this.notEnter;
+	}
 
 	@Override
 	
 	public synchronized void csEnter() {
-		this.currentStatus=new EnteringCS(this);
-		clock.update();
-		requestSentClock=clock.getClock();
+		clock.update();//for event of enter cs
 		this.numOfOk=0;
+		changeToEntering();
 		this.currentStatus.execute();
 		while(this.getNumOfOk()<(this.node.numNodes-1)){
-			System.out.println("current received ok:"+getNumOfOk());
 			try {
 				this.wait();	//can i do better?
 			} catch (InterruptedException e) {
@@ -59,7 +73,8 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 			}
 			
 		}
-
+		verifaction.enterCSTS(clock.toString());
+		verifaction.requestCS(Integer.toString(requestSentClock));
 	}
 
 	public Queue<Integer> getQueue(){
@@ -68,9 +83,19 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	
 	@Override
 	public void csLeave() {
-		this.currentStatus=new NotEnter(this);
+		requestSentClock=Integer.MAX_VALUE;
+		this.changeToNotEntering();
+		//need to determine when the last message put int queue.
 		this.currentStatus.execute();
-		
+	}
+	
+	public boolean isReceiving() {
+		return isReceiving;
+	}
+
+
+	public synchronized void setReceiving(boolean isReceiving) {
+		this.isReceiving = isReceiving;
 	}
 
 

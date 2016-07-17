@@ -15,7 +15,6 @@ class MessageFactory {
 	
 	public Message parseMessage(String str){
 		Message res=null;
-		System.out.println("debug: receive msg"+str);
 		String[] strArray = str.trim().split(";");
 		for(String s:strArray){
 			if(s.toLowerCase().startsWith("method:")){

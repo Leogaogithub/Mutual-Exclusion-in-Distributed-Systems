@@ -2,6 +2,7 @@ package shareUtil;
 
 import RAAlgorithm.Ricart;
 import controllerUnit.Node;
+import lamportAlgorithm.LamportAlgorithm;
 
 public class AlgorithmFactory {
 
@@ -20,7 +21,7 @@ public class AlgorithmFactory {
 			return new Ricart(node);
 		}
 		else if(input.toLowerCase().startsWith("lamport")){
-			
+			return new LamportAlgorithm(node.numNodes,node.localInfor.nodeId);
 		}
 		else if(input.toLowerCase().startsWith("rouc")){
 			

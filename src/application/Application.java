@@ -25,32 +25,36 @@ public class Application {
 	public int csExecutionTimer;
 	public Node node;
 	public Random rand;
-	public Application(Node node){
+	public IMutualExclusiveStrategy strategy=null;
+	public Application(Node node,String algorithmName){
 		rand = new Random();
 		interRequestDelay=node.meanD;
-		csExecutionTimer=node.meanC;
-		
+		csExecutionTimer=node.meanC;	
 		this.node=node;
+		strategy = AlgorithmFactory.getInstance().getAlgorithm(node, algorithmName);
 	}
 	
 	public void start(){
-		IMutualExclusiveStrategy strategy = AlgorithmFactory.getInstance().getAlgorithm(node, "ricart");
+		
 		System.out.println("numofrequest"+node.numRequest);
 		for(int i=0;i<node.numRequest;i++){
+			int t1=nextInterRequestDelay();
+			int t2=nextcsExecutionTimer();
 			try {
-				int t1=nextInterRequestDelay();
-				System.out.println("nextInterRequestDelay"+t1);
+				
+				//System.out.println("nextInterRequestDelay"+t1);
 				Thread.sleep(t1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+			System.out.println("application enter cs! at "+(i+1)+"times with execution time "+t2+"and interrequest delay"+t1);
 			strategy.csEnter();
-			System.out.println("application enter cs! at "+(i+1)+"times.");
+			
 			try {
-				int t2=nextcsExecutionTimer();
-				System.out.println("nextcsExecutionTimer"+t2);			
+				
+				//System.out.println("nextcsExecutionTimer"+t2);			
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
