@@ -8,6 +8,7 @@ import java.util.Set;
 import shareUtil.IMutualExclusiveStrategy;
 import shareUtil.IreceiveMessage;
 import shareUtil.LamportLogicalClock;
+import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
 
 public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessage {
@@ -25,6 +26,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		clock = new LamportLogicalClock();
 		this.localId = localId;
 		this.numOfNode = numOfNode;
+		MessageReceiveService.getInstance().register(this);
 		//this.application = application;
 	}
 	
