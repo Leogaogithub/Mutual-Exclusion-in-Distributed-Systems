@@ -9,18 +9,12 @@ import java.util.Map;
 public class MessageFactory {
     private static final String typeApp = "APP";
     private static final String typeRequest = "REQUEST";
-    private static final String typeRelease = "RELEASE";
+    private static final String typeReply = "REPLY";
 
-    private static MessageFactory singleton = new MessageFactory();
-    private MessageFactory(){}
-    public static MessageFactory getFactory(){
-        return singleton;
-    }
-
-    public static Message createMessage(String type){
-        if(type.equals(typeApp)) return new Message(){{setType(typeApp);}};
-        if(type.equals(typeRelease)) return new Message(){{setType(typeRelease);}};
-        if(type.equals(typeRequest)) return new Message(){{setType(typeRequest);}};
+    public static Message createMessage(String type, int from, int to){
+        if(type.equals(typeApp)) return new Message(){{setType(typeApp);setFrom(from);setTo(to);}};
+        if(type.equals(typeReply)) return new Message(){{setType(typeReply);setFrom(from);setTo(to);}};
+        if(type.equals(typeRequest)) return new Message(){{setType(typeRequest);setFrom(from);setTo(to);}};
         return null;
     }
 

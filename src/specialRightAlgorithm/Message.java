@@ -28,11 +28,11 @@ public class Message {
     public void setType(String t){
         addOrSetAttr("TYPE", t);
     }
-    public void setNodeId(int id){
-        addOrSetAttr("NODEID", String.valueOf(id));
+    public void setFrom(int id){
+        addOrSetAttr("FROM", String.valueOf(id));
     }
-    public void setTimestamp(int timestamp){
-        addOrSetAttr("TIMESTAMP", String.valueOf(timestamp));
+    public void setTo(int id){
+        addOrSetAttr("TO", String.valueOf(id));
     }
     public void setBody(String body){
         addOrSetAttr("BODY", body);
@@ -41,11 +41,11 @@ public class Message {
     public String getType(){
         return getOneAttr("TYPE");
     }
-    public int getNodeId(){
-        return Integer.parseInt(getOneAttr("NODEID"));
+    public int getFrom(){
+        return Integer.parseInt(getOneAttr("FROM"));
     }
-    public int getTimestamp(){
-        return Integer.parseInt(getOneAttr("TIMESTAMP"));
+    public int getTo(){
+        return Integer.parseInt(getOneAttr("TO"));
     }
     public String getBody(){
         return getOneAttr("BODY");
