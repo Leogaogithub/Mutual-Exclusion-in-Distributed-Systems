@@ -12,7 +12,7 @@ import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
 
 public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessage {
-	LamportLogicalClockService clock ;
+	//LamportLogicalClockService clock ;
 	Set<Integer> conditionL1 = new HashSet<Integer>();
 	PriorityQueue<TimeStampWithID> pqueue ;
 	TimeStampWithID localRequestStamp; 
@@ -23,7 +23,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
 		pqueue = new PriorityQueue<TimeStampWithID>(numOfNode, comparator);
 		localRequestStamp = new TimeStampWithID(localId, Integer.MAX_VALUE);
-		clock = LamportLogicalClockService.getInstance();
+		//clock = LamportLogicalClockService.getInstance();
 		this.localId = localId;
 		this.numOfNode = numOfNode;
 		MessageReceiveService.getInstance().register(this);
@@ -32,7 +32,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	
 	public void receive(String message,int channel){
 		Message msg = MessageParser.getSingleton().parser(message);		
-		clock.receiveAction(msg.getTimpeStamp());
+		//clock.receiveAction(msg.getTimpeStamp());
 		String type = msg.getType();
 		if(type==null){
 			//application.receive(message, channel);
@@ -70,8 +70,8 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	
 	private Message preSentMessage(String type){
 		Message msg = MessageFactory.getSingleton().createMessage(type);		
-		clock.sendAction();
-		int stimeStamp = clock.getValue();
+		//clock.sendAction();
+		int stimeStamp = LamportLogicalClockService.getInstance().getValue();
 		msg.setTimpeStamp(stimeStamp);
 		msg.setNodeId(localId);
 		return msg;
@@ -89,8 +89,8 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		String type = MessageFactory.getSingleton().typeRequest;
 		MessageRequest msg = (MessageRequest) MessageFactory.getSingleton().createMessage(type);
 		//be careful 
-		clock.sendAction();
-		localRequestStamp.timeStamp = clock.getValue();
+		//clock.sendAction();
+		localRequestStamp.timeStamp = LamportLogicalClockService.getInstance().getValue();
 		msg.setTimpeStamp(localRequestStamp.timeStamp );
 		msg.setNodeId(localId);		
 		pqueue.add(localRequestStamp);
