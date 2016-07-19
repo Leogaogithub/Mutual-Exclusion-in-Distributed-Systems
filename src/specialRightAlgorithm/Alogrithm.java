@@ -1,14 +1,12 @@
 package specialRightAlgorithm;
 
-import shareUtil.IMutualExclusiveStrategy;
-import shareUtil.IreceiveMessage;
-import shareUtil.MessageSenderService;
+import shareUtil.*;
 
 /**
  * Created by Yifan on 7/18/16.
  */
 public class Alogrithm implements IMutualExclusiveStrategy,
-        IreceiveMessage {
+        IreceiveMessageWithClock {
 
     //TODO need a listening thread.
 
@@ -33,6 +31,8 @@ public class Alogrithm implements IMutualExclusiveStrategy,
         using = false;
         waiting = false;
         rep_deferred = new boolean[N];
+        MessageReceiveService.getInstance().registerWithClock(this);
+
     }
 
     @Override
@@ -75,10 +75,14 @@ public class Alogrithm implements IMutualExclusiveStrategy,
     }
 
     @Override
-    public void receive(String message, int channel) {
+    public void receive(String message, int channel, long milliseconds) {
         Message msg = MessageParser.parseString(message);
-        //TODO ...
+        if(msg.getType().equals("REQUEST"))
+            treatRequest(Integer.parseInt(msg.getBody()), msg.getFrom());
+        if(msg.getType().equals("REPLY"))
+            treatReply(msg.getFrom());
     }
+
 
     synchronized private void treatRequest(int their_seq_num, int from){
         boolean our_priority;
