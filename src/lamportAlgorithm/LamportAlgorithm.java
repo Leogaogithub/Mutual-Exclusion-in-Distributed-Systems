@@ -7,12 +7,12 @@ import java.util.Set;
 
 import shareUtil.IMutualExclusiveStrategy;
 import shareUtil.IreceiveMessage;
-import shareUtil.LamportLogicalClock;
+import shareUtil.LamportLogicalClockService;
 import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
 
 public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessage {
-	LamportLogicalClock clock ;
+	LamportLogicalClockService clock ;
 	Set<Integer> conditionL1 = new HashSet<Integer>();
 	PriorityQueue<TimeStampWithID> pqueue ;
 	TimeStampWithID localRequestStamp; 
@@ -23,7 +23,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
 		pqueue = new PriorityQueue<TimeStampWithID>(numOfNode, comparator);
 		localRequestStamp = new TimeStampWithID(localId, Integer.MAX_VALUE);
-		clock = new LamportLogicalClock();
+		clock = new LamportLogicalClockService();
 		this.localId = localId;
 		this.numOfNode = numOfNode;
 		MessageReceiveService.getInstance().register(this);
