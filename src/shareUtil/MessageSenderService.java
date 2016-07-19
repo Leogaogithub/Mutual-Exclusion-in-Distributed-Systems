@@ -27,15 +27,20 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock,
 		Channel channel = node.channelRemoteMap.get(channelID);	
 		//add vector clock to head 
 		PerformanceMeasureService.getInstance().addSendMessageCount();
-		channel.send("VECTORCLOCK:"+VectorClockService.getInstance().sendAction()+";"+message);
+		LamportLogicalClockService.getInstance().sendAction();
+		VectorClockService.getInstance().sendAction();
+		
+		channel.send("SCALARTIME:"+LamportLogicalClockService.getInstance().getValue()+";"+"VECTORCLOCK:"+VectorClockService.getInstance().toString()+";"+message);
 			
 	}
 	@Override
 	public synchronized void send(String message, int channelID, long milliseconds) {
 		PerformanceMeasureService.getInstance().addSendMessageCount();
 		Channel channel = node.channelRemoteMap.get(channelID);
-		channel.send("CLOCK:"+milliseconds+";"+"VECTORCLOCK:"+VectorClockService.getInstance().sendAction()+";"+message);
-		
+		LamportLogicalClockService.getInstance().sendAction();
+		VectorClockService.getInstance().sendAction();
+		channel.send("CLOCK:"+milliseconds+";"+"SCALARTIME:"+LamportLogicalClockService.getInstance().getValue()+";"+"VECTORCLOCK:"+VectorClockService.getInstance().toString()+";"+message);
+
 		
 	}
 	/**

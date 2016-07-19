@@ -74,7 +74,6 @@ public class PerformanceMeasureService {
 	
 		StringBuilder res = new StringBuilder();
 			int i=count;
-			res.append(nodeid+":");
 			res.append(this.receiveMessageCount[i]);
 			res.append(',');
 			res.append(this.sendMessageCount[i]);

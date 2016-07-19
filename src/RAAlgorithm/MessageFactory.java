@@ -3,7 +3,8 @@ package RAAlgorithm;
 
 class MessageFactory {
 	
-	static MessageFactory single = new MessageFactory();
+	private static MessageFactory single = new MessageFactory();
+	private MessageFactory(){}
 	public static MessageFactory getSingleton(){
 		return single;
 	}
@@ -21,6 +22,9 @@ class MessageFactory {
 				res = new Message(s.substring(7));
 			}
 			else if(s.toLowerCase().startsWith("clock:")){
+				continue;
+			}
+			else if(s.toLowerCase().startsWith("scalartime:")){
 				continue;
 			}
 			else if(s.toLowerCase().startsWith("vectorclock:")){

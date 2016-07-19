@@ -59,7 +59,7 @@ public class ControllerRicartDemo{
 			}
 		}
 		
-		VectorClockService.getInstance().init(myNode);
+		VectorClockService.getInstance().init(myNode.numNodes, nodeID);
 		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
 		
 		try {

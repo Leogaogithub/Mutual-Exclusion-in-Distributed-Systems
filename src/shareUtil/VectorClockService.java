@@ -1,61 +1,60 @@
 package shareUtil;
 
-import controllerUnit.Node;
-
 public class VectorClockService {
-	private int[] v;
-	Node node;
-	int myId;
-	StringBuilder stb=null;
 	
 	private static VectorClockService instance = new VectorClockService();
+	private VectorClockService(){
+	}
 	public static VectorClockService getInstance(){
 		return instance;
 	}
 	
-	public synchronized void init(Node node){
-		this.node=node;
-		myId=node.localInfor.nodeId;
-		v=new int[node.numNodes];
-		v[myId]=1;
+	public int numProcess ;
+	public int localNodeId;
+	int c[] = null;
+	public void init(int numPro, int nodeId){
+		numProcess = numPro;
+		localNodeId = nodeId;
+		c = new int[numPro];
+		for(int i = 0; i < numProcess; i++){
+			c[i] = 0;
+		}
+		c[localNodeId]++;
 	}
 	
-	public synchronized void update(){
-		v[myId]++;
+	public void sendAction(){
+		c[localNodeId]++;
 	}
 	
-	public  synchronized String  sendAction(){
-		v[myId]++;
-		return this.toString();
+	public void tick(){
+		c[localNodeId]++;
 	}
 	
-	public synchronized void receiveMsg(String str){
+
+	
+	public void receiveAction(String vc){
 		int num=0,count=0;
-		for(int i=0;i<str.length();i++){
-			char c=str.charAt(i);
-			if(Character.isDigit(c)){
-				num=num*10+c-'0';
-			}else{
-				v[count]=Math.max(v[count], num);
+		for(int i=0;i<vc.length();i++){
+			char ch=vc.charAt(i);
+			if(Character.isDigit(ch))
+				num=num*10+ch-'0';
+			else{
+				c[count]=Math.max(c[count], num);
 				num=0;
 				count++;
 			}
+			
 		}
-		v[myId]++;
 	}
 	
-	public synchronized int getValue(int i){
-		return v[i];
-	}
-	
-	public synchronized String toString(){
+	public String toString(){
 		StringBuilder stb = new StringBuilder();
-		for(int i:v){
+		for(int i = 0; i < numProcess; i++){
 			stb.append(i);
 			stb.append(',');
 		}
-		stb.setLength(stb.length()-1); //remove the last ','
-		return stb.toString();
+		
+		return stb.substring(0, stb.length()-1);
 	}
 	
 

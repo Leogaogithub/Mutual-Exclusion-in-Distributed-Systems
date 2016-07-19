@@ -8,8 +8,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 import controllerUnit.Node;
 import shareUtil.IMutualExclusiveStrategy;
 import shareUtil.IreceiveMessageWithClock;
+import shareUtil.LamportLogicalClockService;
 import shareUtil.MessageReceiveService;
-import shareUtil.VectorClockService;
 
 public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock{
 	
@@ -23,13 +23,11 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	BlockingQueue<Integer> pendingQueue;
 	private int numOfOk;
 	private boolean isReceiving;
-	public VectorClockService vclock;
 	public CorrectVerification verifaction;
 	
 	public Ricart(Node node){
 
 		this.node=node;
-		this.vclock=VectorClockService.getInstance();
 		verifaction=new CorrectVerification("algorithmTest"+node.localInfor.nodeId);
 		requestQueue=new int[node.numNodes];
 		this.clock=new LamportClock();
@@ -54,7 +52,7 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	
 	public synchronized void csEnter() {
 		clock.update();//for event of enter cs
-		vclock.update();
+		LamportLogicalClockService.getInstance().tick();
 		this.numOfOk=0;
 		changeToEntering();
 		this.currentStatus.execute();
@@ -67,7 +65,6 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 			}
 			
 		}
-		verifaction.enterCS(vclock.toString());
 	}
 
 	public Queue<Integer> getQueue(){
@@ -77,7 +74,6 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	@Override
 	public void csLeave() {
 		requestSentClock=Integer.MAX_VALUE;
-		verifaction.leaveCS(vclock.toString());
 		this.changeToNotEntering();
 		//need to determine when the last message put int queue.
 		this.currentStatus.execute();
@@ -97,6 +93,7 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 
 	@Override
 	public void receive(String message, int channel, long milliseconds) {
+		System.out.println("receiving message:"+message+"from channel service.");
 		Message receivedMsg = MessageFactory.getSingleton().parseMessage(message);
 		this.currentStatus.receive(receivedMsg, channel, milliseconds);
 	
