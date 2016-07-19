@@ -78,7 +78,7 @@ public class ControllerRicartDemo{
 			e.printStackTrace();
 		}
 		
-		Application app = new Application(myNode,"lamport");
+		Application app = new Application(myNode,"rouc");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

@@ -60,7 +60,6 @@ public class Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 			strategy.csLeave();
 		
 			System.out.println("application leaves cs!");

@@ -8,7 +8,6 @@ import shareUtil.*;
 public class Alogrithm implements IMutualExclusiveStrategy,
         IreceiveMessageWithClock {
 
-    //TODO need a listening thread.
 
     private int me;
     private int N;
@@ -21,7 +20,7 @@ public class Alogrithm implements IMutualExclusiveStrategy,
     private boolean waiting;
     private boolean[] rep_deferred;
 
-    Alogrithm(int myid, int allnum){
+    public Alogrithm(int myid, int allnum){
         //assume nodeID start from 0
         me = myid;
         N = allnum;
@@ -44,16 +43,25 @@ public class Alogrithm implements IMutualExclusiveStrategy,
                 //send REQUEST(our_seq_num, me, j) to j
                 Message tmp = MessageFactory.createMessage("REQUEST", me, j);
                 tmp.setBody(String.valueOf(our_seq_num));
-                MessageSenderService.getInstance().send(tmp.toString(), j);
+//                System.out.println("Send: " + tmp.toString());
+                MessageSenderService.getInstance().send(tmp.toString(), j, System.currentTimeMillis());
             }
         }
-        //fuck it! busy waiting
-        while(true){
-            boolean flag = true;
+        boolean flag = true;
+        for(int j = 0; j < N; j++){
+            if(j != me && !rights[j]) flag = false;
+        }
+//        System.out.println("Enter condition: "+ print(rights));
+        while(!flag){
+            try{
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            flag = true;
             for(int j = 0; j < N; j++){
                 if(j != me && !rights[j]) flag = false;
             }
-            if(flag) break;
         }
         waiting = false;
         using = true;
@@ -67,15 +75,15 @@ public class Alogrithm implements IMutualExclusiveStrategy,
                 rights[j] = false;
                 rep_deferred[j] = false;
                 //send REPLY(me, j) to j
-                MessageSenderService.getInstance().send(
-                        MessageFactory.createMessage("REPLY", me, j).toString(), j);
-
+                Message tmp = MessageFactory.createMessage("REPLY", me, j);
+                MessageSenderService.getInstance().send(tmp.toString(), j, System.currentTimeMillis());
             }
         }
     }
 
     @Override
     public void receive(String message, int channel, long milliseconds) {
+//        System.out.println("Receive: "+message);
         Message msg = MessageParser.parseString(message);
         if(msg.getType().equals("REQUEST"))
             treatRequest(Integer.parseInt(msg.getBody()), msg.getFrom());
@@ -88,28 +96,43 @@ public class Alogrithm implements IMutualExclusiveStrategy,
         boolean our_priority;
         hgst_seq_num = Math.max(hgst_seq_num, their_seq_num);
         our_priority = their_seq_num > our_seq_num ||
-                (their_seq_num == our_seq_num && from > me);
+                ((their_seq_num == our_seq_num) && from > me);
         if(using || (waiting && our_priority))
             rep_deferred[from] = true;
-        if((!(using || waiting)) || ((waiting && rights[from]) && !our_priority)){
+        if((!(using || waiting)) || (waiting && !rights[from] && !our_priority)){
             rights[from] = false;
             //send REPLY(ME, J) TO J
             Message tmp = MessageFactory.createMessage("REPLY", me, from);
-            MessageSenderService.getInstance().send(tmp.toString(), from);
+//            System.out.println("Send: " + tmp.toString());
+            MessageSenderService.getInstance().send(tmp.toString(), from, System.currentTimeMillis());
         }
-        if((waiting && rights[from]) && !our_priority){
+        if(waiting && rights[from] && !our_priority){
             rights[from] = false;
             //send REPLY(ME, J) TO J
             Message tmp = MessageFactory.createMessage("REPLY", me, from);
-            MessageSenderService.getInstance().send(tmp.toString(), from);
+//            System.out.println("Send: " + tmp.toString());
+            MessageSenderService.getInstance().send(tmp.toString(), from, System.currentTimeMillis());
             //send REQUEST(our_sequence_num, me, j) to j
             tmp = MessageFactory.createMessage("REQUEST", me, from);
             tmp.setBody(String.valueOf(our_seq_num));
-            MessageSenderService.getInstance().send(tmp.toString(), from);
+//            System.out.println("Send: " + tmp.toString());
+            MessageSenderService.getInstance().send(tmp.toString(), from, System.currentTimeMillis());
         }
+//        System.out.println("After treat Request: "+print(rights));
+        notifyAll();
     }
 
     synchronized private void treatReply(int from){
         rights[from] = true;
+//        System.out.println("After treat Reply: "+print(rights));
+        notifyAll();
+    }
+
+    private String print(boolean[] qwer){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i<qwer.length; i++){
+            sb.append(i).append(":").append(qwer[i]).append(";");
+        }
+        return sb.toString();
     }
 }
