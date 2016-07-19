@@ -3,7 +3,6 @@ package channelTranportLayer;
 import java.io.*;
 import java.net.*;
 import com.sun.nio.sctp.*;
-import controllerUnit.LogWriter;
 import controllerUnit.Node;
 import controllerUnit.NodeInfor;
 
@@ -35,7 +34,7 @@ public class SctpClientPart extends Thread
 			} catch (IOException e) {			
 				e.printStackTrace();
 				System.out.println(serverInfo.hostName + " is not online now, SctpClientPart will connect in 1000ms");
-				LogWriter.getSingle().write(serverInfo.hostName + " is not online now, SctpClientPart will connect in 1000ms\n");
+				//LogWriter.getSingle().write(serverInfo.hostName + " is not online now, SctpClientPart will connect in 1000ms\n");
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e1) {					
@@ -51,7 +50,7 @@ public class SctpClientPart extends Thread
 		String msg = "NODEID:"+locaNode.localInfor.nodeId+";";
 		ch.send(msg.toString());
 		locaNode.addChannel(ch);	
-		LogWriter.getSingle().log("connectChanel() in the SctpClientPart");
+		//LogWriter.getSingle().log("connectChanel() in the SctpClientPart");
 		new SctpRecieverThread(ch).start();
 	}
 

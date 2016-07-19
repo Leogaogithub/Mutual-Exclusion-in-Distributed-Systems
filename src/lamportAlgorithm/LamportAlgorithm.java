@@ -23,7 +23,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
 		pqueue = new PriorityQueue<TimeStampWithID>(numOfNode, comparator);
 		localRequestStamp = new TimeStampWithID(localId, Integer.MAX_VALUE);
-		clock = new LamportLogicalClockService();
+		clock = LamportLogicalClockService.getInstance();
 		this.localId = localId;
 		this.numOfNode = numOfNode;
 		MessageReceiveService.getInstance().register(this);

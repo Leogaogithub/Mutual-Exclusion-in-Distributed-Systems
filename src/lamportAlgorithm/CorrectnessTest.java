@@ -2,48 +2,18 @@ package lamportAlgorithm;
 
 import java.util.Vector;
 
+import shareUtil.LamportLogicalClockService;
+
 import controllerUnit.DataReader;
-import controllerUnit.OutputWriter;
+import controllerUnit.MyLogManager;
 // enterCS.start enterCS.systemtime leaveCS.end leaveCS.systemtime 
 public class CorrectnessTest {
-	
-	class TimeInterval{
-		int enterCSTimeStamp;
-		long enterCSSystemTime;
-		int leaveCSTimeStamp;
-		long leaveCSSystemTime; 
-		
-		TimeInterval(int enterCSTimeStamp, long enterCSSystemTime, int leaveCSTimeStamp, long leaveCSSystemTime){
-			this.enterCSTimeStamp = enterCSTimeStamp;
-			this.leaveCSTimeStamp = leaveCSTimeStamp;
-			this.enterCSSystemTime = enterCSSystemTime;
-			this.leaveCSSystemTime = leaveCSSystemTime;
-		}
-		TimeInterval(){
-			this.enterCSTimeStamp = 0;
-			this.leaveCSTimeStamp = 0;
-			this.enterCSSystemTime = 0;
-			this.leaveCSSystemTime = 0;
-		}
-		
-		void copy(TimeInterval x){			
-			enterCSTimeStamp = x.enterCSTimeStamp;
-			leaveCSTimeStamp = x.leaveCSTimeStamp;
-			enterCSSystemTime = x.enterCSSystemTime;
-			leaveCSSystemTime = x.leaveCSSystemTime;
-		}
-		
-		public String toString(){
-			return enterCSTimeStamp + " " + enterCSSystemTime+ " "+ leaveCSTimeStamp +" " + leaveCSSystemTime;
-		}
-	}
-
 	TimeInterval dataArray[][] = null;	
 	TimeInterval[] sortedResult = null;
 	public long sumSD = 0;
 	public long sumE = 0;
-	public long sd = 0;
-	public long e = 0;
+	public long meanSD = 0;
+	public long meanE = 0;
 	int nodeNums;
 	String fileName;	
 	
@@ -64,7 +34,8 @@ public class CorrectnessTest {
 			for(int j = 0; j < size; j++){
 				String line = lines.get(j);
 				String datas[] = line.split(" ");
-				dataArray[i][j] = new TimeInterval(Integer.parseInt(datas[0]),Long.parseLong(datas[1]) ,Integer.parseInt(datas[2]), Long.parseLong(datas[3]));								
+				dataArray[i][j] = new TimeInterval(Integer.parseInt(datas[0]),Long.parseLong(datas[1]) ,
+						Integer.parseInt(datas[2]), Long.parseLong(datas[3]),Integer.parseInt(datas[4]));								
 			}
 		}		
 	}
@@ -135,7 +106,7 @@ public class CorrectnessTest {
 		int len = sortedResult.length;
 		int i = 0;
 		while(i<len){
-			OutputWriter.getSingle().log(sortedResult[i].toString());
+			MyLogManager.getSingle().getLog("verifyResult").log(sortedResult[i].toString());
 			i++;
 		}		
 		return testCorrect(sortedResult);		
@@ -146,22 +117,43 @@ public class CorrectnessTest {
 		int len = sortedResult.length;
 		int i = 0;
 		while(i<len-1){
-			sumSD += sortedResult[i+1].enterCSSystemTime - sortedResult[i].leaveCSSystemTime;
-			sumE += sortedResult[i].leaveCSSystemTime - sortedResult[i].enterCSSystemTime;
+			long sd = sortedResult[i+1].enterCSSystemTime - sortedResult[i].leaveCSSystemTime;
+			sumSD += sd;
+			MyLogManager.getSingle().getLog("SD").log("sd:"+sd + " id:" +  sortedResult[i].nodeId + "->" + sortedResult[i+1].nodeId);
+			MyLogManager.getSingle().getLog("SD").log("sumSD:"+sumSD);
+			long e = sortedResult[i].leaveCSSystemTime - sortedResult[i].enterCSSystemTime;
+			sumE += e;			
+			MyLogManager.getSingle().getLog("E").log("e:"+e+" id:" + sortedResult[i].nodeId);
+			MyLogManager.getSingle().getLog("E").log("sumE:"+sumE);
 			i++;
 		}		
-		sd = sumSD/(len-1);
-		e = sumE/(len-1);
+		meanSD = sumSD/(len-1);		
+		MyLogManager.getSingle().getLog("SD").log("meanSD:"+meanSD);
+		meanE = sumE/(len-1);
+		
+		MyLogManager.getSingle().getLog("E").log("meanE:"+meanE);
 	}
 	
 	public static void main(String[] args) {
-		String fileName = "test";
-		int nums = 4;
+		String fileName = "TimeInterval";
+		int nums = 3;
 		CorrectnessTest test = new CorrectnessTest(fileName, nums);
-		OutputWriter.getSingle().open(fileName+".out");
-		OutputWriter.getSingle().clear();
 		boolean result = test.verifyResult();
-		System.out.println(result);
+		test.caculate();
+		System.out.println("verifyResult: " + result);
+		System.out.println("CorrectnessTest finished");
+	}
+	
+	public static void main1(String[] args) {
+		int i = 0;
+		while(i++<100){
+			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
+			long enterCSSystemTime = System.currentTimeMillis();		
+			LamportLogicalClockService.getInstance().tick();		
+			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
+			long leaveCSSystemTime = System.currentTimeMillis();
+			System.out.println(enterCSSystemTime + ":"+leaveCSSystemTime);
+		}
 	}
 
 }

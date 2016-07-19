@@ -1,9 +1,7 @@
 package demo;
 
-import controllerUnit.Controller;
 import controllerUnit.ControllerRicartDemo;
-import controllerUnit.LogWriter;
-import controllerUnit.OutputWriter;
+
 
 public class Host3 {
 	public static void main(String[] args){
@@ -13,11 +11,13 @@ public class Host3 {
 		String configfile=currentDir+"/config.txt";  //linux
 		int nodeId = 2;
 		String prefixName = configfile.substring(0, configfile.length()-4)+"-" + String.valueOf(nodeId);
-		LogWriter.getSingle().open(prefixName+".log");
-		LogWriter.getSingle().clear();		
-		OutputWriter.getSingle().open(prefixName+".out");
-		OutputWriter.getSingle().clear();
-		ControllerRicartDemo controller3 = new ControllerRicartDemo(2,"tcp",configfile);
+
+		//LogWriter.getSingle().open(prefixName+".log");
+		//LogWriter.getSingle().clear();		
+		//OutputWriter.getSingle().open(prefixName+".out");
+		//OutputWriter.getSingle().clear();
+		ControllerRicartDemo controller3 = new ControllerRicartDemo(2,"sctp",configfile);
+
 		controller3.start();
 	}
 
