@@ -43,7 +43,7 @@ public class MessageReceiveService implements IreceiveMessage{
 			//vector
 			int vcStartPos=msg.indexOf("VECTORCLOCK:", 10);
 			int vcEndPos=msg.indexOf(";", vcStartPos+12);
-			String vc = msg.substring(vcStartPos+11,vcEndPos);
+			String vc = msg.substring(vcStartPos+12,vcEndPos+1);
 			VectorClockService.getInstance().receiveAction(vc);
 			
 			for(IreceiveMessage obj:listenerList){
@@ -59,7 +59,7 @@ public class MessageReceiveService implements IreceiveMessage{
 			//vector time
 			int vcStartPos=msg.indexOf("VECTORCLOCK:", 31);
 			int vcEndPos=msg.indexOf(";", vcStartPos+12);
-			String vc = msg.substring(vcStartPos+11,vcEndPos);
+			String vc = msg.substring(vcStartPos+12,vcEndPos+1);
 			VectorClockService.getInstance().receiveAction(vc);
 			
 			for(IreceiveMessageWithClock obj:listenerListWithClock){

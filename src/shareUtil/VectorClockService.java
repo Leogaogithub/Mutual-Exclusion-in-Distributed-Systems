@@ -34,23 +34,26 @@ public class VectorClockService {
 	
 	public void receiveAction(String vc){
 		int num=0,count=0;
+	
 		for(int i=0;i<vc.length();i++){
 			char ch=vc.charAt(i);
-			if(Character.isDigit(ch))
+			if(Character.isDigit(ch)){
 				num=num*10+ch-'0';
-			else{
-				c[count]=Math.max(c[count], num);
-				num=0;
-				count++;
 			}
-			
+			else {
+				c[count]=Math.max(c[count],num);
+				count++;
+				num=0;
+			}	
 		}
+		c[localNodeId]++;
 	}
+	
 	
 	public String toString(){
 		StringBuilder stb = new StringBuilder();
 		for(int i = 0; i < numProcess; i++){
-			stb.append(i);
+			stb.append(c[i]);
 			stb.append(',');
 		}
 		
