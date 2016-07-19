@@ -93,7 +93,6 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 
 	@Override
 	public void receive(String message, int channel, long milliseconds) {
-		System.out.println("receiving message:"+message+"from channel service.");
 		Message receivedMsg = MessageFactory.getSingleton().parseMessage(message);
 		this.currentStatus.receive(receivedMsg, channel, milliseconds);
 	

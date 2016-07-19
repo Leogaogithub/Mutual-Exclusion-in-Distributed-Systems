@@ -47,7 +47,7 @@ public class MessageReceiveService implements IreceiveMessage{
 			VectorClockService.getInstance().receiveAction(vc);
 			
 			for(IreceiveMessage obj:listenerList){
-				obj.receive(msg.substring(vcEndPos), channelID);
+				obj.receive(msg.substring(vcEndPos+1), channelID);
 			}
 			
 		}else if(msg.startsWith("CLOCK:")){
