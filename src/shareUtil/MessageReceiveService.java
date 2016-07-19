@@ -32,14 +32,38 @@ public class MessageReceiveService implements IreceiveMessage{
 	 * @param ippaddress
 	 */
 	public synchronized void receive(String msg,int channelID){
+		PerformanceMeasureService.getInstance().addReceiveMessageCount();
+		
+		//System.out.println("Received"+msg+"from channel"+channelID);
 		if(!msg.startsWith("CLOCK:")){
+			
+			//SCALARTIME
+			String tmp =msg.substring(11, msg.indexOf(';'));
+			LamportLogicalClockService.getInstance().receiveAction(Integer.parseInt(tmp));
+			//vector
+			int vcStartPos=msg.indexOf("VECTORCLOCK:", 10);
+			int vcEndPos=msg.indexOf(";", vcStartPos+12);
+			String vc = msg.substring(vcStartPos+11,vcEndPos);
+			VectorClockService.getInstance().receiveAction(vc);
+			
 			for(IreceiveMessage obj:listenerList){
-				obj.receive(msg, channelID);
+				obj.receive(msg.substring(vcEndPos), channelID);
 			}
+			
 		}else if(msg.startsWith("CLOCK:")){
-			String clock=msg.split(";")[0].substring(6);
+			
+			String clock=msg.substring(6,18);	
+			//SCALARTIME
+			String tmp =msg.substring(31,msg.indexOf(';', 31));
+			LamportLogicalClockService.getInstance().receiveAction(Integer.parseInt(tmp));
+			//vector time
+			int vcStartPos=msg.indexOf("VECTORCLOCK:", 31);
+			int vcEndPos=msg.indexOf(";", vcStartPos+12);
+			String vc = msg.substring(vcStartPos+11,vcEndPos);
+			VectorClockService.getInstance().receiveAction(vc);
+			
 			for(IreceiveMessageWithClock obj:listenerListWithClock){
-				obj.receive(msg, channelID,Long.parseLong(clock));
+				obj.receive(msg.substring(vcEndPos+1), channelID,Long.parseLong(clock));
 			}
 		}
 		

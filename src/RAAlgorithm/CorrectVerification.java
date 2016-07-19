@@ -7,14 +7,14 @@ import java.io.RandomAccessFile;
 public class CorrectVerification {
 	
 	
-	private RandomAccessFile logRequestCS= null;
-	private RandomAccessFile logEnterFile = null;
+	private RandomAccessFile logLeaveCS= null;
+	private RandomAccessFile logEnterCS = null;
 	
 	public CorrectVerification(String name){
 	
 		try {
-			logEnterFile = new RandomAccessFile("enterCS"+name, "rw");
-			logRequestCS = new RandomAccessFile("requestCS"+name, "rw");
+			logEnterCS = new RandomAccessFile("enterCS"+name, "rw");
+			logLeaveCS = new RandomAccessFile("leaveCS"+name, "rw");
 
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
@@ -25,30 +25,30 @@ public class CorrectVerification {
 
 
 	
-	public void enterCSTS(String str){
+	public void enterCS(String str){
 		
 		try {
-			logEnterFile.writeChars(str+";");
+			logEnterCS.writeChars(str+";");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-
 	}
 	
 	
-	public void requestCS(String str){
+	public void leaveCS(String str){
 		
 		try {
-			logRequestCS.writeChars(str+";");
+			logLeaveCS.writeChars(str+";");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-
 	}
+	
+
 	
 
 }

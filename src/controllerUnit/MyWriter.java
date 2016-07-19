@@ -6,7 +6,9 @@ import java.io.RandomAccessFile;
 public class MyWriter {
 	private RandomAccessFile logFile = null;
 	String prefix = null;
-	
+	public MyWriter(){
+		
+	}
 	void setPrefix(String prefix){
 		this.prefix = prefix;
 	}

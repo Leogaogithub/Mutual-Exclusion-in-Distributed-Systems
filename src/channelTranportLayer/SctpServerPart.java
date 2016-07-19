@@ -3,8 +3,6 @@ package channelTranportLayer;
 import java.io.*;
 import java.net.*;
 import com.sun.nio.sctp.*;
-
-import controllerUnit.LogWriter;
 import controllerUnit.Node;
 import controllerUnit.NodeInfor;
 import controllerUnit.UtilityTool;
@@ -41,7 +39,7 @@ public class SctpServerPart extends Thread
 	
 	private void connectAllClient()
 	{		
-		LogWriter.getSingle().log("connectAllClient() in SctpServerPart");		
+		//LogWriter.getSingle().log("connectAllClient() in SctpServerPart");		
 		for(NodeInfor nb: localNode.neighbors.values()){
 			if(UtilityTool.preIsClient(localNode.localInfor.nodeId, nb.nodeId)){				
 				continue;
@@ -61,7 +59,7 @@ public class SctpServerPart extends Thread
 						SCTPChannel ch = new SCTPChannel(id, sctpChannel);
 						localNode.addChannel(ch);						
 						connected = true;
-						LogWriter.getSingle().log("connect nodeID: ("+ String.valueOf(ch.channelID)+") Client in connectAllClient() in SctpServerPart");
+						//LogWriter.getSingle().log("connect nodeID: ("+ String.valueOf(ch.channelID)+") Client in connectAllClient() in SctpServerPart");
 						new SctpRecieverThread(ch).start();
 					}							
 				}
@@ -71,6 +69,6 @@ public class SctpServerPart extends Thread
 				}		
 			}						
 		}
-		LogWriter.getSingle().log("finished connectAllClient() in SctpServerPart");
+		//LogWriter.getSingle().log("finished connectAllClient() in SctpServerPart");
 	}	
 }
