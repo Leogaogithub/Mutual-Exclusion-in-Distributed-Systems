@@ -1,8 +1,13 @@
 package shareUtil;
 
-public class LamportLogicalClock {
+public class LamportLogicalClockService {
+	private static LamportLogicalClockService instance = new LamportLogicalClockService();
+	public static LamportLogicalClockService getInstance(){		
+		return instance;
+	}
+	
 	int c;
-	public LamportLogicalClock(){
+	public LamportLogicalClockService(){
 		c = 1;
 	}
 	
