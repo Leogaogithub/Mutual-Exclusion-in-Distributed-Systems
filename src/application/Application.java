@@ -4,11 +4,15 @@ import controllerUnit.MyLogManager;
 import controllerUnit.Node;
 import shareUtil.AlgorithmFactory;
 import shareUtil.IMutualExclusiveStrategy;
+<<<<<<< HEAD
 
 import shareUtil.PerformanceMeasureService;
 
 import shareUtil.LamportLogicalClockService;
 
+=======
+import shareUtil.PerformanceMeasureService;
+>>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
 
 import java.util.Random;
 
@@ -62,6 +66,7 @@ public class Application {
 			
 			strategy.csEnter();
 			
+<<<<<<< HEAD
 
 			long grantedCSTime = System.currentTimeMillis();
 			
@@ -72,18 +77,28 @@ public class Application {
 			try {
 				LamportLogicalClockService.getInstance().tick();
 				//System.out.println("nextcsExecutionTimer"+t2);			
+=======
+			long grantedCSTime = System.currentTimeMillis();
+
+			try {
+
+>>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
 
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
 
 			//System.out.println("application leaves cs!");
+=======
+>>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
 			strategy.csLeave();
 
 			PerformanceMeasureService.getInstance().updateCSTime(requestCSTime, grantedCSTime);
 			
+<<<<<<< HEAD
 			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
 			long leaveCSSystemTime = System.currentTimeMillis();	
 			TimeInterval curTimeInterval =  new TimeInterval(enterCSTimeStamp,enterCSSystemTime,leaveCSTimeStamp, leaveCSSystemTime, node.localInfor.nodeId);
@@ -91,6 +106,11 @@ public class Application {
 			strategy.csLeave();		
 			System.out.println("application leaves cs!");
 		}		
+=======
+		}
+		
+		
+>>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
 	}
 	
 	public int nextInterRequestDelay(){

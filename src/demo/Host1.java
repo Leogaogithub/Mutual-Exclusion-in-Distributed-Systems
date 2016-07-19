@@ -13,11 +13,7 @@ public class Host1 {
 		int nodeId = 0;
 		String prefixName = configfile.substring(0, configfile.length()-4)+"-" + String.valueOf(nodeId);
 
-		//LogWriter.getSingle().open(prefixName+".log");
-		//LogWriter.getSingle().clear();		
-		//OutputWriter.getSingle().open(prefixName+".out");
-		//OutputWriter.getSingle().clear();		
-		ControllerRicartDemo controller1 = new ControllerRicartDemo(0,"sctp",configfile);
+		ControllerRicartDemo controller1 = new ControllerRicartDemo(0,"tcp",configfile);
 
 		controller1.start();
 	}
