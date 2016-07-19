@@ -3,6 +3,7 @@ package application;
 import controllerUnit.Node;
 import shareUtil.AlgorithmFactory;
 import shareUtil.IMutualExclusiveStrategy;
+import shareUtil.PerformanceMeasureService;
 
 import java.util.Random;
 
@@ -16,7 +17,7 @@ time, denoted by c. The first parameter d denotes the time elapsed between when 
 request is satisfied and when it generates the next request. The second parameter c denotes the
 time a node spends in its critical section. Assume that both d and c are random variables with
 exponential probability distribution.
- * @author tongxin
+ * 
  *
  */
 public class Application {
@@ -41,29 +42,33 @@ public class Application {
 			int t1=nextInterRequestDelay();
 			int t2=nextcsExecutionTimer();
 			try {
-				
-				//System.out.println("nextInterRequestDelay"+t1);
 				Thread.sleep(t1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			System.out.println("application enter cs! at "+(i+1)+"times with execution time "+t2+"and interrequest delay"+t1);
+			if(i%100==0)
+				System.out.println("application enter cs! at "+(i+1)+"times with execution time "+t2+"and interrequest delay"+t1);
+			
+			long requestCSTime = System.currentTimeMillis();
+			
 			strategy.csEnter();
 			
+			long grantedCSTime = System.currentTimeMillis();
+			
 			try {
-				
-				//System.out.println("nextcsExecutionTimer"+t2);			
+		
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			//System.out.println("application leaves cs!");
 			strategy.csLeave();
-		
-			System.out.println("application leaves cs!");
+
+			PerformanceMeasureService.getInstance().updateCSTime(requestCSTime, grantedCSTime);
+			
 		}
 		
 		

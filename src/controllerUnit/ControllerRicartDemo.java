@@ -19,6 +19,8 @@ import channelTranportLayer.TCPServerListener;
 
 import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
+import shareUtil.PerformanceMeasureService;
+import shareUtil.VectorClockService;
 
 
 
@@ -57,6 +59,9 @@ public class ControllerRicartDemo{
 			}
 		}
 		
+		VectorClockService.getInstance().init(myNode);
+		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
+		
 		try {
 			MessageReceiveService.getInstance().connectNode(myNode);
 		} catch (IOException e) {
@@ -78,9 +83,9 @@ public class ControllerRicartDemo{
 			e.printStackTrace();
 		}
 		
-		Application app = new Application(myNode,"lamport");
+		Application app = new Application(myNode,"ricart");
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

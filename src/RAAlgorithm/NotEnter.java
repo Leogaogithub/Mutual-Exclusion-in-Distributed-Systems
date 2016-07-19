@@ -11,15 +11,10 @@ public class NotEnter extends Status{
 
 	@Override
 	public synchronized void execute() {
-        
-		while(ricart.isReceiving()){
-			//waiting previous status end.
-			System.out.println("not enter status waiting queue to poll");
-		}
 	
 		while(!ricart.getQueue().isEmpty()){			
 			int tmpid=ricart.getQueue().poll();
-			System.out.println("After leaving cs, forward ok to "+tmpid);
+			//System.out.println("After leaving cs, forward ok to "+tmpid);
 			sendOkMsg(tmpid);
 		}
 		
@@ -32,11 +27,12 @@ public class NotEnter extends Status{
 	public void receive(Message message, int channel, long milliseconds) {
 
 		ricart.clock.receiveMsg(Integer.parseInt(message.avp.get("TIMESTAMP")));
+		
 		if(message.method.equals("REQUEST")){
 			sendOkMsg(channel);
 		}
 		else if(message.method.equals("OK")){
-			System.out.println("In not enter pattern: current received ok:"+ricart.getNumOfOk()+"numofNodes"+ricart.node.numNodes);
+			//System.out.println("In not enter pattern: current received ok:"+ricart.getNumOfOk()+"numofNodes"+ricart.node.numNodes);
 		}
 
 	}
@@ -46,7 +42,7 @@ public class NotEnter extends Status{
 		currentClock.update();
 		OK.addAVP("TIMESTAMP", currentClock.toString());
 		MessageSenderService.getInstance().send(OK.toString(), channel, System.currentTimeMillis());
-		System.out.println("during idle, reply ok to channel"+channel);
+		//System.out.println("during idle, reply ok to channel"+channel);
 	}
 
 

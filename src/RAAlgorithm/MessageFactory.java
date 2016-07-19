@@ -23,6 +23,9 @@ class MessageFactory {
 			else if(s.toLowerCase().startsWith("clock:")){
 				continue;
 			}
+			else if(s.toLowerCase().startsWith("vectorclock:")){
+				continue;
+			}
 			else{
 				String[] avp = s.trim().split(":");	
 				res.addAVP(avp[0], avp[1]);

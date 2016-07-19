@@ -32,12 +32,21 @@ public class MessageReceiveService implements IreceiveMessage{
 	 * @param ippaddress
 	 */
 	public synchronized void receive(String msg,int channelID){
+		PerformanceMeasureService.getInstance().addReceiveMessageCount();
+		//System.out.println("Received"+msg+"from channel"+channelID);
 		if(!msg.startsWith("CLOCK:")){
+			
+			VectorClockService.getInstance().receiveMsg(msg.substring(12, msg.indexOf(';')));
+			
+			
 			for(IreceiveMessage obj:listenerList){
 				obj.receive(msg, channelID);
 			}
 		}else if(msg.startsWith("CLOCK:")){
-			String clock=msg.split(";")[0].substring(6);
+			
+			String clock=msg.substring(6,18);			
+			VectorClockService.getInstance().receiveMsg(msg.substring(32,msg.indexOf(';', 32)+1 ));
+			
 			for(IreceiveMessageWithClock obj:listenerListWithClock){
 				obj.receive(msg, channelID,Long.parseLong(clock));
 			}
