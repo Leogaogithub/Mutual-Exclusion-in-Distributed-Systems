@@ -1,10 +1,14 @@
 package application;
 
+import controllerUnit.MyLogManager;
 import controllerUnit.Node;
 import shareUtil.AlgorithmFactory;
 import shareUtil.IMutualExclusiveStrategy;
+import shareUtil.LamportLogicalClockService;
 
 import java.util.Random;
+
+import lamportAlgorithm.TimeInterval;
 
 
 
@@ -52,8 +56,10 @@ public class Application {
 			System.out.println("application enter cs! at "+(i+1)+"times with execution time "+t2+"and interrequest delay"+t1);
 			strategy.csEnter();
 			
+			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
+			long enterCSSystemTime = System.currentTimeMillis();
 			try {
-				
+				LamportLogicalClockService.getInstance().tick();
 				//System.out.println("nextcsExecutionTimer"+t2);			
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
@@ -61,12 +67,13 @@ public class Application {
 				e.printStackTrace();
 			}
 			
-			strategy.csLeave();
-		
+			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
+			long leaveCSSystemTime = System.currentTimeMillis();	
+			TimeInterval curTimeInterval =  new TimeInterval(enterCSTimeStamp,enterCSSystemTime,leaveCSTimeStamp, leaveCSSystemTime, node.localInfor.nodeId);
+			MyLogManager.getSingle().getLog("TimeInterval"+node.localInfor.nodeId).log(curTimeInterval.toString());
+			strategy.csLeave();		
 			System.out.println("application leaves cs!");
-		}
-		
-		
+		}		
 	}
 	
 	public int nextInterRequestDelay(){
