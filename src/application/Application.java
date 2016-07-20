@@ -66,7 +66,7 @@ public class Application {
 			long grantedCSTime = System.currentTimeMillis();
 			
 		
-
+			
 			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
 			long enterCSSystemTime = System.currentTimeMillis();
 			try {
