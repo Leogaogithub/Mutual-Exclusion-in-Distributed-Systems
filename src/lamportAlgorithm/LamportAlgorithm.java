@@ -93,8 +93,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		localRequestStamp.timeStamp = LamportLogicalClockService.getInstance().getValue();
 		msg.setTimpeStamp(localRequestStamp.timeStamp );
 		msg.setNodeId(localId);		
-		pqueue.add(localRequestStamp);
-		long milliseconds = System.currentTimeMillis(); 
+		pqueue.add(localRequestStamp);		
 		MessageSenderService.getInstance().sendBroadCast(msg.toString());
 		while(true){
 			try {
@@ -115,8 +114,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		conditionL1 = new HashSet<Integer>();
 		pqueue.poll();
 		String type = MessageFactory.getSingleton().typeRelease;
-		Message release = preSentMessage(type);
-		//long milliseconds = System.currentTimeMillis(); 
+		Message release = preSentMessage(type);		 
 		MessageSenderService.getInstance().sendBroadCast(release.toString());			
 	}
 	

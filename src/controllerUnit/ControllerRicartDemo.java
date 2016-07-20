@@ -83,7 +83,8 @@ public class ControllerRicartDemo{
 			e.printStackTrace();
 		}
 		
-		Application app = new Application(myNode,"ricart");
+		Application app = new Application(myNode,"rouc");
+
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {

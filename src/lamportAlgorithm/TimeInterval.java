@@ -1,21 +1,19 @@
 package lamportAlgorithm;
 public class TimeInterval{
-	int enterCSTimeStamp;
+	MyVector enterCSTimeStamp;
 	long enterCSSystemTime;
-	int leaveCSTimeStamp;
+	MyVector leaveCSTimeStamp;
 	long leaveCSSystemTime; 
 	int nodeId;
 	
-	public TimeInterval(int enterCSTimeStamp, long enterCSSystemTime, int leaveCSTimeStamp, long leaveCSSystemTime, int nodeId){
+	public TimeInterval(MyVector enterCSTimeStamp, long enterCSSystemTime, MyVector leaveCSTimeStamp, long leaveCSSystemTime, int nodeId){
 		this.enterCSTimeStamp = enterCSTimeStamp;
 		this.leaveCSTimeStamp = leaveCSTimeStamp;
 		this.enterCSSystemTime = enterCSSystemTime;
 		this.leaveCSSystemTime = leaveCSSystemTime;
 		this.nodeId = nodeId;
 	}
-	public TimeInterval(){
-		this.enterCSTimeStamp = 0;
-		this.leaveCSTimeStamp = 0;
+	public TimeInterval(){		
 		this.enterCSSystemTime = 0;
 		this.leaveCSSystemTime = 0;
 		nodeId = 0;
@@ -30,6 +28,6 @@ public class TimeInterval{
 	}
 	
 	public String toString(){
-		return enterCSTimeStamp + " " + enterCSSystemTime+ " "+ leaveCSTimeStamp +" " + leaveCSSystemTime + " " + nodeId;
+		return enterCSTimeStamp.toString() + " " + enterCSSystemTime+ " "+ leaveCSTimeStamp.toString() +" " + leaveCSSystemTime + " " + nodeId;
 	}
 }

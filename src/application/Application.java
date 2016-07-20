@@ -4,14 +4,16 @@ import controllerUnit.MyLogManager;
 import controllerUnit.Node;
 import shareUtil.AlgorithmFactory;
 import shareUtil.IMutualExclusiveStrategy;
+import shareUtil.VectorClockService;
+
 
 import shareUtil.PerformanceMeasureService;
-
 import shareUtil.LamportLogicalClockService;
 
 
 import java.util.Random;
 
+import lamportAlgorithm.MyVector;
 import lamportAlgorithm.TimeInterval;
 
 
@@ -61,36 +63,28 @@ public class Application {
 			long requestCSTime = System.currentTimeMillis();
 			
 			strategy.csEnter();
-			
-
 			long grantedCSTime = System.currentTimeMillis();
-			
-		
-			
-			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
+			MyVector enterCSTimeStamp = MyVector.copy(VectorClockService.getInstance().toString());
+					
 			long enterCSSystemTime = System.currentTimeMillis();
 			try {
-				LamportLogicalClockService.getInstance().tick();
-				//System.out.println("nextcsExecutionTimer"+t2);			
-
+				VectorClockService.getInstance().tick();
+				//System.out.println("nextcsExecutionTimer"+t2);
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-
-			//System.out.println("application leaves cs!");
-			strategy.csLeave();
-
+			}	
 			PerformanceMeasureService.getInstance().updateCSTime(requestCSTime, grantedCSTime);
-			
-			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
+			MyVector leaveCSTimeStamp = MyVector.copy(VectorClockService.getInstance().toString());			
 			long leaveCSSystemTime = System.currentTimeMillis();	
 			TimeInterval curTimeInterval =  new TimeInterval(enterCSTimeStamp,enterCSSystemTime,leaveCSTimeStamp, leaveCSSystemTime, node.localInfor.nodeId);
 			MyLogManager.getSingle().getLog("TimeInterval"+node.localInfor.nodeId).log(curTimeInterval.toString());
+			VectorClockService.getInstance().tick();
 			strategy.csLeave();		
 			System.out.println("application leaves cs!");
 		}		
+
 	}
 	
 	public int nextInterRequestDelay(){
