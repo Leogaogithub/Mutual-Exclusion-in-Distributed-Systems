@@ -4,18 +4,16 @@ import controllerUnit.MyLogManager;
 import controllerUnit.Node;
 import shareUtil.AlgorithmFactory;
 import shareUtil.IMutualExclusiveStrategy;
-<<<<<<< HEAD
+import shareUtil.VectorClockService;
+
 
 import shareUtil.PerformanceMeasureService;
-
 import shareUtil.LamportLogicalClockService;
 
-=======
-import shareUtil.PerformanceMeasureService;
->>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
 
 import java.util.Random;
 
+import lamportAlgorithm.MyVector;
 import lamportAlgorithm.TimeInterval;
 
 
@@ -65,52 +63,28 @@ public class Application {
 			long requestCSTime = System.currentTimeMillis();
 			
 			strategy.csEnter();
-			
-<<<<<<< HEAD
-
 			long grantedCSTime = System.currentTimeMillis();
-			
-		
-
-			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
+			MyVector enterCSTimeStamp = MyVector.copy(VectorClockService.getInstance().toString());
+					
 			long enterCSSystemTime = System.currentTimeMillis();
 			try {
-				LamportLogicalClockService.getInstance().tick();
-				//System.out.println("nextcsExecutionTimer"+t2);			
-=======
-			long grantedCSTime = System.currentTimeMillis();
-
-			try {
-
->>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
-
+				VectorClockService.getInstance().tick();
+				//System.out.println("nextcsExecutionTimer"+t2);
 				Thread.sleep(t2);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-<<<<<<< HEAD
-
-			//System.out.println("application leaves cs!");
-=======
->>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
-			strategy.csLeave();
-
+			}	
 			PerformanceMeasureService.getInstance().updateCSTime(requestCSTime, grantedCSTime);
-			
-<<<<<<< HEAD
-			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
+			MyVector leaveCSTimeStamp = MyVector.copy(VectorClockService.getInstance().toString());			
 			long leaveCSSystemTime = System.currentTimeMillis();	
 			TimeInterval curTimeInterval =  new TimeInterval(enterCSTimeStamp,enterCSSystemTime,leaveCSTimeStamp, leaveCSSystemTime, node.localInfor.nodeId);
 			MyLogManager.getSingle().getLog("TimeInterval"+node.localInfor.nodeId).log(curTimeInterval.toString());
+			VectorClockService.getInstance().tick();
 			strategy.csLeave();		
 			System.out.println("application leaves cs!");
 		}		
-=======
-		}
-		
-		
->>>>>>> b0ad76ba85149a25a1cb6c6e6c7d36bd1a9cc116
+
 	}
 	
 	public int nextInterRequestDelay(){

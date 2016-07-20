@@ -12,13 +12,34 @@ public class MessageFactory {
     private static final String typeReply = "REPLY";
 
     public static Message createMessage(String type, int from, int to){
-        if(type.equals(typeApp)) return new Message(){{setType(typeApp);setFrom(from);setTo(to);}};
-        if(type.equals(typeReply)) return new Message(){{setType(typeReply);setFrom(from);setTo(to);}};
-        if(type.equals(typeRequest)) return new Message(){{setType(typeRequest);setFrom(from);setTo(to);}};
+        if(type.equals(typeApp)){
+        	Message msg = new Message();
+        	msg.setType(typeApp);
+        	msg.setFrom(from);
+        	msg.setTo(to);        	
+        	return msg;
+        }
+        if(type.equals(typeReply)){
+        	Message msg = new Message();
+        	msg.setType(typeReply);
+        	msg.setFrom(from);
+        	msg.setTo(to);        	
+        	return msg;
+        	
+        }
+        if(type.equals(typeRequest)){
+        	Message msg = new Message();
+        	msg.setType(typeRequest);
+        	msg.setFrom(from);
+        	msg.setTo(to);        	
+        	return msg;
+        }
         return null;
     }
 
     public static Message createMessage(Map<String, String> attrValues){
-        return new Message(){{setAttrValues(new HashMap<>(attrValues));}};
+    	Message msg = new Message();
+    	msg.setAttrValues(new HashMap<>(attrValues));    	       	
+    	return msg;        
     }
 }

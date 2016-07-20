@@ -19,6 +19,8 @@ public class MessageParser {
             String[] pair = one.split(":");
             tmp.put(pair[0], pair[1]);
         }
-        return new Message(){{setAttrValues(tmp);}};
+        Message ppp = new Message();
+        ppp.setAttrValues(tmp);
+        return ppp;
     }
 }

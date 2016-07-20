@@ -7,7 +7,7 @@ import shareUtil.LamportLogicalClockService;
 import controllerUnit.DataReader;
 import controllerUnit.MyLogManager;
 // enterCS.start enterCS.systemtime leaveCS.end leaveCS.systemtime 
-public class CorrectnessTest {
+public class CorrectnessTestByVectorClock {
 	TimeInterval dataArray[][] = null;	
 	TimeInterval[] sortedResult = null;
 	public long sumSD = 0;
@@ -18,7 +18,7 @@ public class CorrectnessTest {
 	String fileName;	
 	
 	
-	CorrectnessTest(String fileName, int nums){
+	CorrectnessTestByVectorClock(String fileName, int nums){
 		dataArray = new TimeInterval[nums][];
 		nodeNums = nums;
 		this.fileName = fileName;
@@ -26,16 +26,32 @@ public class CorrectnessTest {
 	
 	
 	void readDataFromFile(){
+		int vc[] = new int[nodeNums];
+		MyVector enterCSTimeStamp;
+		long enterCSSystemTime;
+		MyVector leaveCSTimeStamp;
+		long leaveCSSystemTime;		
 		for(int i = 0; i < nodeNums; i++){
 			String name = fileName+i;
 			Vector<String> lines = DataReader.readLines(name);
 			int size = lines.size();
-			dataArray[i] = new TimeInterval[size];
+			dataArray[i] = new TimeInterval[size];			 
 			for(int j = 0; j < size; j++){
 				String line = lines.get(j);
 				String datas[] = line.split(" ");
-				dataArray[i][j] = new TimeInterval(Integer.parseInt(datas[0]),Long.parseLong(datas[1]) ,
-						Integer.parseInt(datas[2]), Long.parseLong(datas[3]),Integer.parseInt(datas[4]));								
+				int idx = 0;				
+				for(int vck = 0; vck < nodeNums; vck++){
+					vc[vck] = Integer.parseInt(datas[idx++]);
+				}
+				enterCSTimeStamp = MyVector.copy(vc);
+				enterCSSystemTime = Long.parseLong(datas[idx++]);
+				for(int vck = 0; vck < nodeNums; vck++){
+					vc[vck] = Integer.parseInt(datas[idx++]);
+				}
+				leaveCSTimeStamp = MyVector.copy(vc);
+				leaveCSSystemTime = Long.parseLong(datas[idx++]);				
+				dataArray[i][j] = new TimeInterval(enterCSTimeStamp,enterCSSystemTime ,
+						leaveCSTimeStamp, leaveCSSystemTime, Integer.parseInt(datas[idx++]));								
 			}
 		}		
 	}
@@ -54,7 +70,7 @@ public class CorrectnessTest {
 		int ln = 0;
 		while(l1i < l1.length && l2i < l2.length){
 			newArray[ln] = new TimeInterval();
-			if(l1[l1i].enterCSTimeStamp < l2[l2i].enterCSTimeStamp){
+			if(MyVector.compare(l2[l2i].enterCSTimeStamp, l1[l1i].enterCSTimeStamp) == 1 ){
 				newArray[ln].copy(l1[l1i]);
 				l1i++;
 			}else{
@@ -81,16 +97,16 @@ public class CorrectnessTest {
 	boolean testCorrect(TimeInterval wholeData[]){
 		int len = wholeData.length;
 		int i = 1;
-		if(wholeData[0].leaveCSTimeStamp < wholeData[0].enterCSTimeStamp) {
+		if(MyVector.compare(wholeData[0].enterCSTimeStamp, wholeData[0].leaveCSTimeStamp)!=-1) {
 			System.out.println(0);
 			return false;
 		}
 		while(i<len){
-			if(wholeData[i].leaveCSTimeStamp < wholeData[i].enterCSTimeStamp) {
+			if(MyVector.compare(wholeData[i].enterCSTimeStamp, wholeData[i].leaveCSTimeStamp) != -1 ) {
 				System.out.println(i);
 				return false;
 			}
-			if(wholeData[i-1].leaveCSTimeStamp >= wholeData[i].enterCSTimeStamp) {
+			if(MyVector.compare(wholeData[i].enterCSTimeStamp,wholeData[i-1].leaveCSTimeStamp) != 1) {
 				System.out.println(i);
 				return false;
 			}
@@ -137,7 +153,7 @@ public class CorrectnessTest {
 	public static void main(String[] args) {
 		String fileName = "TimeInterval";
 		int nums = 3;
-		CorrectnessTest test = new CorrectnessTest(fileName, nums);
+		CorrectnessTestByVectorClock test = new CorrectnessTestByVectorClock(fileName, nums);
 		boolean result = test.verifyResult();
 		test.caculate();
 		System.out.println("verifyResult: " + result);
