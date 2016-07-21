@@ -81,14 +81,16 @@ public class PerformanceMeasureService {
 	
 		StringBuilder res = new StringBuilder();
 			int i=count;
+			res.append(this.enterCSTimes[i]);
+			res.append(',');
 			res.append(this.receiveMessageCount[i]);
 			res.append(',');
 			res.append(this.sendMessageCount[i]);
 			res.append(',');
-			res.append(this.enterCSTimes[i]);
-			res.append(',');
 			res.append(this.responseTime[i]);
 			res.append(';');
+			res.append(System.getProperty("line.separator"));
+			
 			try {
 				pmFile.writeChars(res.toString());
 			} catch (IOException e) {
