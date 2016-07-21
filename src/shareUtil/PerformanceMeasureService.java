@@ -23,12 +23,16 @@ public class PerformanceMeasureService {
 	public int interval;
 	public RandomAccessFile pmFile;
 	public int nodeid;
+	public String curDirectory;
 
 	private static PerformanceMeasureService instance = new PerformanceMeasureService();
 	public static PerformanceMeasureService getInstance(){
 		return instance;
 	}
 	
+	public void setDir(String curdir){
+		curDirectory = curdir;
+	}
 	public void init(int interval,int nodeid){
 		this.sendMessageCount=new long[interval];
 		this.receiveMessageCount= new long[interval];
@@ -36,7 +40,10 @@ public class PerformanceMeasureService {
 		this.responseTime=new long[interval];
 		this.interval=interval;
 		this.nodeid=nodeid;
-		String fileName="performance_file"+"seq_"+count+"_node"+Integer.toString(nodeid);
+		receiveTotal=0;
+		sendTotal=0;
+		count=0;
+		String fileName= curDirectory+ "performance_file"+"seq_"+count+"_node"+Integer.toString(nodeid);
 		try {
 			pmFile = new RandomAccessFile(fileName,"rw");
 			pmFile.setLength(0);

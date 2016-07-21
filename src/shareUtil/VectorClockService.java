@@ -15,7 +15,9 @@ public class VectorClockService {
 	public void init(int numPro, int nodeId){
 		numProcess = numPro;
 		localNodeId = nodeId;
-		c = new int[numPro];
+		if(c==null || c.length != numPro){
+			c = new int[numPro];
+		}
 		for(int i = 0; i < numProcess; i++){
 			c[i] = 0;
 		}
