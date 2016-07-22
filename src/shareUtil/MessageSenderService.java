@@ -67,6 +67,13 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock,
 			send(message,i);
 		}	
 	}
+	
+
+	public synchronized void sendControlMessageng(String message, int channelID) {
+		Channel channel = node.channelRemoteMap.get(channelID);	
+		channel.send(message);
+
+	}
 
 
 }

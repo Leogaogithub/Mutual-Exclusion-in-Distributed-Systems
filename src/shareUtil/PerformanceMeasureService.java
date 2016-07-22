@@ -33,6 +33,7 @@ public class PerformanceMeasureService {
 	public void setDir(String curdir){
 		curDirectory = curdir;
 	}
+	
 	public void init(int interval,int nodeid){
 		this.sendMessageCount=new long[interval];
 		this.receiveMessageCount= new long[interval];

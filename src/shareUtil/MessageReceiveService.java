@@ -12,6 +12,7 @@ public class MessageReceiveService implements IreceiveMessage{
 	Node node=null;
 	private static MessageReceiveService instance = new MessageReceiveService();
 	protected List<IreceiveMessage> listenerList = new CopyOnWriteArrayList<IreceiveMessage>();
+	protected List<IreceiveControlMessage> listenerCtrlList = new CopyOnWriteArrayList<IreceiveControlMessage>();
 	protected List<IreceiveMessageWithClock> listenerListWithClock = new CopyOnWriteArrayList<IreceiveMessageWithClock>();
 	
 	public static MessageReceiveService getInstance(){		
@@ -65,6 +66,10 @@ public class MessageReceiveService implements IreceiveMessage{
 			for(IreceiveMessageWithClock obj:listenerListWithClock){
 				obj.receive(msg.substring(vcEndPos+1), channelID,Long.parseLong(clock));
 			}
+		}else if(msg.startsWith("BYE")){
+			for(IreceiveControlMessage i:listenerCtrlList){
+				i.receiveControlMessage(msg, channelID);
+			}
 		}
 		
 	}
@@ -93,5 +98,15 @@ public class MessageReceiveService implements IreceiveMessage{
 	public void unregisterWithClock(IreceiveMessageWithClock obj){
 		listenerListWithClock.remove(obj);
 	}
+	
+	public void registerCtrlMsg(IreceiveControlMessage obj){
+		listenerCtrlList.add(obj);
+	}
+	
+	public void unregisterCtrlMsg(IreceiveControlMessage obj){
+		listenerCtrlList.remove(obj);
+	}
+	
+
 
 }
