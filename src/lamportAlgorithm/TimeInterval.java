@@ -1,10 +1,10 @@
 package lamportAlgorithm;
 public class TimeInterval{
-	MyVector enterCSTimeStamp;
-	long enterCSSystemTime;
-	MyVector leaveCSTimeStamp;
-	long leaveCSSystemTime; 
-	int nodeId;
+	public MyVector enterCSTimeStamp;
+	public long enterCSSystemTime;
+	public MyVector leaveCSTimeStamp;
+	public long leaveCSSystemTime; 
+	public int nodeId;
 	
 	public TimeInterval(MyVector enterCSTimeStamp, long enterCSSystemTime, MyVector leaveCSTimeStamp, long leaveCSSystemTime, int nodeId){
 		this.enterCSTimeStamp = enterCSTimeStamp;

@@ -36,6 +36,7 @@ public class Application {
 	public Node node;
 	public Random rand;
 	public IMutualExclusiveStrategy strategy=null;
+	public String curDirectory = "";
 	public Application(Node node,String algorithmName){
 		rand = new Random();
 		interRequestDelay=node.meanD;
@@ -44,9 +45,14 @@ public class Application {
 		strategy = AlgorithmFactory.getInstance().getAlgorithm(node, algorithmName);
 	}
 	
+	public void setDir(String curdir){
+		curDirectory = curdir;
+	}
+	
+	
 	public void start(){
-		
-		System.out.println("numofrequest"+node.numRequest);
+		MyLogManager.getSingle().setDir(curDirectory);
+		System.out.println("numofrequest"+node.numRequest);		
 		for(int i=0;i<node.numRequest;i++){
 			int t1=nextInterRequestDelay();
 			int t2=nextcsExecutionTimer();
@@ -83,8 +89,7 @@ public class Application {
 			VectorClockService.getInstance().tick();
 			strategy.csLeave();		
 			System.out.println("application leaves cs!");
-		}		
-
+		}
 	}
 	
 	public int nextInterRequestDelay(){

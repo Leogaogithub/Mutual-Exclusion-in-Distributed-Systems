@@ -16,10 +16,7 @@ public class NotEnter extends Status{
 			int tmpid=ricart.getQueue().poll();
 			//System.out.println("After leaving cs, forward ok to "+tmpid);
 			sendOkMsg(tmpid);
-		}
-		
-	
-		
+		}	
 		
 	}
 
@@ -44,9 +41,4 @@ public class NotEnter extends Status{
 		MessageSenderService.getInstance().send(OK.toString(), channel, System.currentTimeMillis());
 		//System.out.println("during idle, reply ok to channel"+channel);
 	}
-
-
-
-
-
 }

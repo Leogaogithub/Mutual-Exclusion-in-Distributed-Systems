@@ -1,13 +1,17 @@
-package lamportAlgorithm;
+package application;
 
 import java.util.Vector;
 
 import shareUtil.LamportLogicalClockService;
 
+import lamportAlgorithm.MyVector;
+import lamportAlgorithm.TimeInterval;
+
+
 import controllerUnit.DataReader;
 import controllerUnit.MyLogManager;
 // enterCS.start enterCS.systemtime leaveCS.end leaveCS.systemtime 
-public class CorrectnessTestByVectorClock {
+public class CorrectnessVerify {
 	TimeInterval dataArray[][] = null;	
 	TimeInterval[] sortedResult = null;
 	public long sumSD = 0;
@@ -18,7 +22,7 @@ public class CorrectnessTestByVectorClock {
 	String fileName;	
 	
 	
-	CorrectnessTestByVectorClock(String fileName, int nums){
+	CorrectnessVerify(String fileName, int nums){
 		dataArray = new TimeInterval[nums][];
 		nodeNums = nums;
 		this.fileName = fileName;
@@ -151,10 +155,17 @@ public class CorrectnessTestByVectorClock {
 	}
 	
 	public static void main(String[] args) {
-		String fileName = "TimeInterval";
+		String fileName = "./n3-d20-c10/1/TimeInterval";
 		int nums = 3;
-		CorrectnessTestByVectorClock test = new CorrectnessTestByVectorClock(fileName, nums);
+		if(args.length > 0){
+			fileName = args[0];
+		}
+		if(args.length > 1){
+			nums = Integer.parseInt(args[1]);
+		}
+		CorrectnessVerify test = new CorrectnessVerify(fileName, nums);
 		boolean result = test.verifyResult();
+		MyLogManager.getSingle().getLog("verifyResult").log(String.valueOf(result));
 		test.caculate();
 		System.out.println("verifyResult: " + result);
 		System.out.println("CorrectnessTest finished");

@@ -22,13 +22,9 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 	private Status notEnter;
 	BlockingQueue<Integer> pendingQueue;
 	private int numOfOk;
-	private boolean isReceiving;
-	public CorrectVerification verifaction;
 	
 	public Ricart(Node node){
-
-		this.node=node;
-		verifaction=new CorrectVerification("algorithmTest"+node.localInfor.nodeId);
+		this.node=node;		
 		requestQueue=new int[node.numNodes];
 		this.clock=new LamportClock();
 		this.entering=new EnteringCS(this);
@@ -79,42 +75,20 @@ public class Ricart implements IMutualExclusiveStrategy,IreceiveMessageWithClock
 		this.currentStatus.execute();
 	}
 	
-	public boolean isReceiving() {
-		return isReceiving;
-	}
-
-
-	public synchronized void setReceiving(boolean isReceiving) {
-		this.isReceiving = isReceiving;
-	}
-
-
-	
 
 	@Override
 	public void receive(String message, int channel, long milliseconds) {
 		Message receivedMsg = MessageFactory.getSingleton().parseMessage(message);
-		this.currentStatus.receive(receivedMsg, channel, milliseconds);
-	
-		
+		this.currentStatus.receive(receivedMsg, channel, milliseconds);		
 	}
-
-
 
 
 	public int getNumOfOk() {
 		return numOfOk;
 	}
 
-
-
-
 	public synchronized void addNumOfOk() {
 		this.numOfOk ++;
-	}
-
-
-
-	
+	}	
 
 }

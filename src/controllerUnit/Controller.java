@@ -5,43 +5,37 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 import lamportAlgorithm.ChannelManager;
 import application.Application;
-import application.TestReceiveApplication;
-import application.TestReceiveApplicationWithClock;
-import application.TestSendApplication;
-import application.TestSendApplicationWithClock;
 import channelTranportLayer.SCTPSubSystem;
 import channelTranportLayer.TCPChannel;
 import channelTranportLayer.TCPClientHandler;
 import channelTranportLayer.TCPServerListener;
-
 import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
 import shareUtil.PerformanceMeasureService;
 import shareUtil.VectorClockService;
 
-
-
-public class ControllerRicartDemo{
-	
+public class Controller{	
 
 	public Node  myNode;	
 	public String filename;
 	public String transport;
+	public String algorithmName;
 	public int nodeID;
-	public ControllerRicartDemo(int nodeID,String transport,String configFile){
-
+	public String curDirectory = "";
+	public Controller(int nodeID,String configFile, String algorithmName,String transport){
 		this.transport=transport;
 		this.filename=configFile;
 		this.nodeID=nodeID;
-
+		this.algorithmName = algorithmName;
+	}	
+	
+	public void setDir(String curdir){
+		curDirectory = curdir;
 	}
-
 	
-	
-	public void start(){		
+	public void init(){		
 		//parse config file
 		Parser.getSingleton().setLocalNodeId(nodeID);
 		this.myNode=Parser.getSingleton().parseFile(filename);
@@ -59,8 +53,9 @@ public class ControllerRicartDemo{
 			}
 		}
 		
-		VectorClockService.getInstance().init(myNode.numNodes, nodeID);
+		VectorClockService.getInstance().init(myNode.numNodes, nodeID);		
 		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
+		PerformanceMeasureService.getInstance().setDir(curDirectory);
 		
 		try {
 			MessageReceiveService.getInstance().connectNode(myNode);
@@ -81,19 +76,23 @@ public class ControllerRicartDemo{
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		Application app = new Application(myNode,"rouc");
-
+		}				
+	}
+	
+	
+	public void start(){		
+		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
+		PerformanceMeasureService.getInstance().setDir(curDirectory);
+		Application app = new Application(myNode,algorithmName);
+		app.setDir(curDirectory);
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(8000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}		
+		//VectorClockService.getInstance().init(myNode.numNodes, nodeID);
 		app.start();
-
-		
 	}
 	
 	/**
@@ -136,11 +135,7 @@ public class ControllerRicartDemo{
 		}
 		Thread thread = new Thread(server);
 		thread.start();
-	}
-
-	
-
-	
+	}	
 	
 	/**
 	 * start to listen connection request from node with larger id
@@ -189,15 +184,9 @@ public class ControllerRicartDemo{
 				//start new thread to listen the socket;
 				new Thread(
 						new TCPClientHandler(clientSocket,remoteNode.nodeId)
-						).start();  //should use start
-				
+						).start();  //should use start				
 					
 		}
 
 	}
-	
-	
-	
-	
-
 }
