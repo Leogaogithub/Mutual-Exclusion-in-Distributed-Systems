@@ -93,7 +93,7 @@ public class PerformanceMeasureService {
 			res.append(System.getProperty("line.separator"));
 			
 			try {
-				pmFile.writeChars(res.toString());
+				pmFile.writeBytes(res.toString());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

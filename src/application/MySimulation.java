@@ -2,6 +2,8 @@ package application;
 
 import java.io.File;
 
+import shareUtil.MessageSenderService;
+
 import controllerUnit.Controller;
 
 public class MySimulation {
@@ -12,15 +14,15 @@ public class MySimulation {
 	public static void main(String[] args) {
 		int nodeId = 0;
 		String configfile = "config.txt";
-		String algorithmName = "rouc";//rouc,lamport, ricart,
+		String algorithmName = "ricart";//rouc,lamport, ricart,
 		String transport = "tcp";//tcp,sctp		
 		int startD = 20;
 		int endD = 30;
-		int increaseD = 5;		
+		int increaseD = 10;		
 		int startC = 10;
 		int endC = 20;
-		int increaseC = 5;
-		int times = 2;
+		int increaseC = 10;
+		int times = 1;
 		if(args.length > 0){
 			nodeId = Integer.parseInt(args[0]);
 		}
@@ -74,13 +76,13 @@ public class MySimulation {
 					createDir(curdir);
 					controller.setDir(curdir+"/");
 					controller.start();	
-					
+					MessageSenderService.getInstance().boardcastControlMessageng("BYE");
 					while(!ControlMessageProcess.getInstance().isOk()){
 						try {
-							Thread.sleep(500);
+							Thread.sleep(50);
 						} catch (InterruptedException e) {							
 							e.printStackTrace();
-						}							
+						}						
 					}										
 				}				
 			}			

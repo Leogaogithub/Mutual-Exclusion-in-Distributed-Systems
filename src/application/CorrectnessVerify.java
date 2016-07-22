@@ -170,17 +170,4 @@ public class CorrectnessVerify {
 		System.out.println("verifyResult: " + result);
 		System.out.println("CorrectnessTest finished");
 	}
-	
-	public static void main1(String[] args) {
-		int i = 0;
-		while(i++<100){
-			int enterCSTimeStamp = LamportLogicalClockService.getInstance().getValue();
-			long enterCSSystemTime = System.currentTimeMillis();		
-			LamportLogicalClockService.getInstance().tick();		
-			int leaveCSTimeStamp = LamportLogicalClockService.getInstance().getValue();			
-			long leaveCSSystemTime = System.currentTimeMillis();
-			System.out.println(enterCSSystemTime + ":"+leaveCSSystemTime);
-		}
-	}
-
 }

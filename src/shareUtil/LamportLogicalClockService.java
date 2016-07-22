@@ -11,6 +11,10 @@ public class LamportLogicalClockService {
 		c = 1;
 	}
 	
+	public void refresh(){
+		c = 1;
+	}
+	
 	public int getValue(){
 		return c;
 	}

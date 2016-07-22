@@ -12,6 +12,7 @@ import channelTranportLayer.SCTPSubSystem;
 import channelTranportLayer.TCPChannel;
 import channelTranportLayer.TCPClientHandler;
 import channelTranportLayer.TCPServerListener;
+import shareUtil.LamportLogicalClockService;
 import shareUtil.MessageReceiveService;
 import shareUtil.MessageSenderService;
 import shareUtil.PerformanceMeasureService;
@@ -52,12 +53,8 @@ public class Controller{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		
-		VectorClockService.getInstance().init(myNode.numNodes, nodeID);		
-		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
-		PerformanceMeasureService.getInstance().setDir(curDirectory);
-		ControlMessageProcess.getInstance().init(myNode.neighbors.size());
+		}		
+
 		try {
 			MessageReceiveService.getInstance().connectNode(myNode);
 		} catch (IOException e) {
@@ -70,25 +67,22 @@ public class Controller{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		try {
-			Thread.sleep(6000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}				
+		}			
+		VectorClockService.getInstance().init(myNode.numNodes, nodeID);	
+		ControlMessageProcess.getInstance().init(myNode.neighbors.size());
 	}
 	
 	
-	public void start(){		
+	public void start(){
+		LamportLogicalClockService.getInstance().refresh();
 		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
 		PerformanceMeasureService.getInstance().setDir(curDirectory);
 		Application app = new Application(myNode,algorithmName);
+		VectorClockService.getInstance().refresh();
 		ControlMessageProcess.getInstance().refresh();
 		app.setDir(curDirectory);
 		try {
-			Thread.sleep(8000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

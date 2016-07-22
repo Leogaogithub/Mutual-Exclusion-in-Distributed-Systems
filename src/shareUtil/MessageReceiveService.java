@@ -32,9 +32,14 @@ public class MessageReceiveService implements IreceiveMessage{
 	 * @param msg
 	 * @param ippaddress
 	 */
-	public synchronized void receive(String msg,int channelID){
+	public synchronized void receive(String msg,int channelID){				
+		if(msg.startsWith("BYE")){
+			for(IreceiveControlMessage i:listenerCtrlList){
+				i.receiveControlMessage(msg, channelID);
+			}
+			return;
+		}
 		PerformanceMeasureService.getInstance().addReceiveMessageCount();
-		
 		//System.out.println("Received"+msg+"from channel"+channelID);
 		if(!msg.startsWith("CLOCK:")){
 			
@@ -66,11 +71,7 @@ public class MessageReceiveService implements IreceiveMessage{
 			for(IreceiveMessageWithClock obj:listenerListWithClock){
 				obj.receive(msg.substring(vcEndPos+1), channelID,Long.parseLong(clock));
 			}
-		}else if(msg.startsWith("BYE")){
-			for(IreceiveControlMessage i:listenerCtrlList){
-				i.receiveControlMessage(msg, channelID);
-			}
-		}
+		} 
 		
 	}
 	
