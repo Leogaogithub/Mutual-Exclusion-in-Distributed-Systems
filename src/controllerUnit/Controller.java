@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import lamportAlgorithm.ChannelManager;
 import application.Application;
+import application.ControlMessageProcess;
 import channelTranportLayer.SCTPSubSystem;
 import channelTranportLayer.TCPChannel;
 import channelTranportLayer.TCPClientHandler;
@@ -56,7 +57,7 @@ public class Controller{
 		VectorClockService.getInstance().init(myNode.numNodes, nodeID);		
 		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
 		PerformanceMeasureService.getInstance().setDir(curDirectory);
-		
+		ControlMessageProcess.getInstance().init(myNode.neighbors.size());
 		try {
 			MessageReceiveService.getInstance().connectNode(myNode);
 		} catch (IOException e) {
@@ -84,6 +85,7 @@ public class Controller{
 		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
 		PerformanceMeasureService.getInstance().setDir(curDirectory);
 		Application app = new Application(myNode,algorithmName);
+		ControlMessageProcess.getInstance().refresh();
 		app.setDir(curDirectory);
 		try {
 			Thread.sleep(8000);

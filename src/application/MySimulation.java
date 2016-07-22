@@ -73,7 +73,15 @@ public class MySimulation {
 					String curdir = curDirecotry+"n"+controller.myNode.numNodes+"-d"+d+"-c"+c+"/"+i;
 					createDir(curdir);
 					controller.setDir(curdir+"/");
-					controller.start();					
+					controller.start();	
+					
+					while(!ControlMessageProcess.getInstance().isOk()){
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {							
+							e.printStackTrace();
+						}							
+					}										
 				}				
 			}			
 		}
