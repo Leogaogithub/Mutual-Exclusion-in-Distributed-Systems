@@ -44,7 +44,7 @@ public class PerformanceMeasureService {
 		receiveTotal=0;
 		sendTotal=0;
 		count=0;
-		String fileName= curDirectory+ "performance_file"+"seq_"+count+"_node"+Integer.toString(nodeid);
+		String fileName= curDirectory+ "performance_file"+"seq_"+count+"_node_"+Integer.toString(nodeid);
 		try {
 			pmFile = new RandomAccessFile(fileName,"rw");
 			pmFile.setLength(0);

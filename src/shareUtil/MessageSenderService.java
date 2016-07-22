@@ -74,6 +74,12 @@ public class MessageSenderService implements IsendMessage,IsendMessageWithClock,
 		channel.send(message);
 
 	}
+	public synchronized void boardcastControlMessageng(String message, int channelID) {
+		for(Integer i:node.channelRemoteMap.keySet()){
+			sendControlMessageng(message,i);
+		}
+
+	}
 
 
 }
