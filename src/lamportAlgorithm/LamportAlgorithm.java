@@ -56,7 +56,13 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		}else{
 			// deliver message to application
 			//application.receive(message, channel);
-		}		
+		}	
+		
+		if((!pqueue.isEmpty())&&pqueue.peek().nodeId == localId && conditionL1.size()== numOfNode-1){
+			synchronized(this){
+				this.notify();
+			}			
+		}
 	}
 	
 	public void handlerRequest(MessageRequest msg, int channel){
@@ -85,7 +91,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	}
 	
 	@Override
-	public void csEnter() {		
+	public synchronized void  csEnter() {		
 		String type = MessageFactory.getSingleton().typeRequest;
 		MessageRequest msg = (MessageRequest) MessageFactory.getSingleton().createMessage(type);
 		//be careful 
@@ -95,7 +101,15 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		msg.setNodeId(localId);		
 		pqueue.add(localRequestStamp);		
 		MessageSenderService.getInstance().sendBroadCast(msg.toString());
-		while(true){
+		if(!(pqueue.peek().nodeId == localId && conditionL1.size()== numOfNode-1)){			
+				try {
+					this.wait();
+				} catch (InterruptedException e) {				
+					e.printStackTrace();
+				}				
+		}
+		
+		/*while(true){
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {				
@@ -104,7 +118,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 			if(pqueue.peek().nodeId == localId && conditionL1.size()== numOfNode-1){
 				break;
 			}
-		}
+		}*/
 	}
 
 	@Override

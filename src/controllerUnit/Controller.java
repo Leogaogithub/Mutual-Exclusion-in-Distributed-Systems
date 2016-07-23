@@ -75,8 +75,8 @@ public class Controller{
 	
 	public void start(){
 		LamportLogicalClockService.getInstance().refresh();
-		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);
 		PerformanceMeasureService.getInstance().setDir(curDirectory);
+		PerformanceMeasureService.getInstance().init(myNode.numRequest,myNode.localInfor.nodeId);		
 		Application app = new Application(myNode,algorithmName);
 		VectorClockService.getInstance().refresh();
 		ControlMessageProcess.getInstance().refresh();

@@ -23,8 +23,7 @@ public class PerformanceMeasureService {
 	public int interval;
 	public RandomAccessFile pmFile;
 	public int nodeid;
-	public String curDirectory;
-
+	public String curDirectory="";
 	private static PerformanceMeasureService instance = new PerformanceMeasureService();
 	public static PerformanceMeasureService getInstance(){
 		return instance;
@@ -98,9 +97,7 @@ public class PerformanceMeasureService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			res.setLength(0);
-
-		
+			res.setLength(0);	
 		
 	}
 	

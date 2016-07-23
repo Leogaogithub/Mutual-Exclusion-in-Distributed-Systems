@@ -136,34 +136,40 @@ public class CorrectnessVerify {
 		sortedResult = megerSortK(dataArray, 0, dataArray.length);
 		int len = sortedResult.length;
 		int i = 0;
+		MyLogManager.getSingle().getLog("SD").log("sd \t sumSD \t nodeId \t nodeId");
+		MyLogManager.getSingle().getLog("E").log("e \t sumE \t nodeId");	
 		while(i<len-1){
 			long sd = sortedResult[i+1].enterCSSystemTime - sortedResult[i].leaveCSSystemTime;
 			sumSD += sd;
-			MyLogManager.getSingle().getLog("SD").log("sd:"+sd + " id:" +  sortedResult[i].nodeId + "->" + sortedResult[i+1].nodeId);
-			MyLogManager.getSingle().getLog("SD").log("sumSD:"+sumSD);
+			MyLogManager.getSingle().getLog("SD").log(sd + "\t"+sumSD + "\t" +  sortedResult[i].nodeId + "->" + sortedResult[i+1].nodeId);
+			
 			long e = sortedResult[i].leaveCSSystemTime - sortedResult[i].enterCSSystemTime;
 			sumE += e;			
-			MyLogManager.getSingle().getLog("E").log("e:"+e+" id:" + sortedResult[i].nodeId);
-			MyLogManager.getSingle().getLog("E").log("sumE:"+sumE);
+			MyLogManager.getSingle().getLog("E").log(e+"\t"+sumE+ "\t" + sortedResult[i].nodeId);			
 			i++;
 		}		
 		meanSD = sumSD/(len-1);		
-		MyLogManager.getSingle().getLog("SD").log("meanSD:"+meanSD);
-		meanE = sumE/(len-1);
-		
-		MyLogManager.getSingle().getLog("E").log("meanE:"+meanE);
+		MyLogManager.getSingle().getLog("meanSD").log(meanSD+"");
+		meanE = sumE/(len-1);		
+		MyLogManager.getSingle().getLog("meanE").log(meanE+"");
 	}
 	
 	public static void main(String[] args) {
-		String fileName = "./n3-d20-c10/1/TimeInterval";
-		int nums = 3;
+		String fileName = "./TimeInterval";
+		String curDirecotry = "";
+		int numNodes = 3;
 		if(args.length > 0){
-			fileName = args[0];
+			fileName = args[0];	
+			curDirecotry = fileName;
+		}
+		if(curDirecotry.contains("/")){
+			curDirecotry = curDirecotry.substring(0,curDirecotry.lastIndexOf("/")+1);
 		}
 		if(args.length > 1){
-			nums = Integer.parseInt(args[1]);
+			numNodes = Integer.parseInt(args[1]);
 		}
-		CorrectnessVerify test = new CorrectnessVerify(fileName, nums);
+		MyLogManager.getSingle().setDir(curDirecotry);
+		CorrectnessVerify test = new CorrectnessVerify(fileName, numNodes);
 		boolean result = test.verifyResult();
 		MyLogManager.getSingle().getLog("verifyResult").log(String.valueOf(result));
 		test.caculate();

@@ -18,7 +18,7 @@ public class MySimulation1 {
 		String transport = "tcp";//tcp,sctp		
 		int startD = 20;
 		int endD = 30;
-		int increaseD = 10;		
+		int increaseD = 20;		
 		int startC = 10;
 		int endC = 20;
 		int increaseC = 10;
@@ -75,10 +75,14 @@ public class MySimulation1 {
 					String curdir = curDirecotry+"n"+controller.myNode.numNodes+"-d"+d+"-c"+c+"/"+i;					
 					createDir(curdir);
 					controller.setDir(curdir+"/");
-					controller.start();	
+					controller.start();						
 					MessageSenderService.getInstance().boardcastControlMessageng("BYE");
 					while(!ControlMessageProcess.getInstance().isOk()){
-													
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {							
+							e.printStackTrace();
+						}							
 					}	
 				}				
 			}			
