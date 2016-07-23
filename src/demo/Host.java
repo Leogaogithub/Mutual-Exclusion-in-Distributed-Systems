@@ -10,7 +10,7 @@ public class Host {
 		//System.out.println(currentDir);		
 		int nodeId = 0;
 		String configfile = "config.txt";
-		String algorithmName = "lamport";//rouc,lamport, ricart,
+		String algorithmName = "ricart";//rouc,lamport, ricart,
 		String transport = "tcp";//tcp,sctp
 		if(args.length > 0){
 			nodeId = Integer.parseInt(args[0]);

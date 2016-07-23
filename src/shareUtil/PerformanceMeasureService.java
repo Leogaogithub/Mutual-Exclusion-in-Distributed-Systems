@@ -43,7 +43,7 @@ public class PerformanceMeasureService {
 		receiveTotal=0;
 		sendTotal=0;
 		count=0;
-		String fileName= curDirectory+ "performance_file"+"seq_"+count+"_node_"+Integer.toString(nodeid);
+		String fileName= curDirectory+ "performance_file_node_"+Integer.toString(nodeid);
 		try {
 			pmFile = new RandomAccessFile(fileName,"rw");
 			pmFile.setLength(0);
@@ -61,11 +61,8 @@ public class PerformanceMeasureService {
 		this.enterCSTimes[count]=count+1;
 		this.responseTime[count]=grantT-requestT;
 		this.toFile();
-		count++;
-	
-	}
-	
-	
+		count++;	
+	}	
 
 
 	public synchronized void addSendMessageCount() {

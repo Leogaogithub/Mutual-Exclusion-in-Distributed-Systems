@@ -60,7 +60,7 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		
 		if((!pqueue.isEmpty())&&pqueue.peek().nodeId == localId && conditionL1.size()== numOfNode-1){
 			synchronized(this){
-				this.notify();
+				this.notifyAll();
 			}			
 		}
 	}
@@ -83,7 +83,9 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 		return msg;
 	}
 	public void handlerRelease(MessageRelease message, int channel){
-		pqueue.poll();
+		if(!pqueue.isEmpty()){
+			pqueue.poll();
+		}		
 	}
 	
 	public void handlerReply(MessageReply message, int channel){
@@ -125,8 +127,10 @@ public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessag
 	public void csLeave() {
 		// be careful of the order of localRequestStamp and conditionL1.
 		localRequestStamp.timeStamp = Integer.MAX_VALUE;
-		conditionL1 = new HashSet<Integer>();
-		pqueue.poll();
+		conditionL1.clear();		
+		if(!pqueue.isEmpty()){
+			pqueue.poll();
+		}
 		String type = MessageFactory.getSingleton().typeRelease;
 		Message release = preSentMessage(type);		 
 		MessageSenderService.getInstance().sendBroadCast(release.toString());			

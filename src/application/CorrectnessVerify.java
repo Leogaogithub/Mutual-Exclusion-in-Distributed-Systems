@@ -3,6 +3,7 @@ package application;
 import java.util.Vector;
 
 import shareUtil.LamportLogicalClockService;
+import shareUtil.PerformanceParser;
 
 import lamportAlgorithm.MyVector;
 import lamportAlgorithm.TimeInterval;
@@ -16,8 +17,9 @@ public class CorrectnessVerify {
 	TimeInterval[] sortedResult = null;
 	public long sumSD = 0;
 	public long sumE = 0;
-	public long meanSD = 0;
-	public long meanE = 0;
+	public double meanSD = 0;
+	public double meanE = 0;
+	boolean verifyResult = false;
 	int nodeNums;
 	String fileName;	
 	
@@ -26,6 +28,11 @@ public class CorrectnessVerify {
 		dataArray = new TimeInterval[nums][];
 		nodeNums = nums;
 		this.fileName = fileName;
+		sumSD = 0;
+		sumE = 0;
+		meanSD = 0;
+		meanE = 0;
+		verifyResult = false;
 	}
 	
 	
@@ -98,29 +105,33 @@ public class CorrectnessVerify {
 		return newArray;
 	}
 	
-	boolean testCorrect(TimeInterval wholeData[]){
+	void testCorrect(TimeInterval wholeData[]){
 		int len = wholeData.length;
 		int i = 1;
 		if(MyVector.compare(wholeData[0].enterCSTimeStamp, wholeData[0].leaveCSTimeStamp)!=-1) {
 			System.out.println(0);
-			return false;
+			verifyResult = false;
+			return;
 		}
 		while(i<len){
 			if(MyVector.compare(wholeData[i].enterCSTimeStamp, wholeData[i].leaveCSTimeStamp) != -1 ) {
 				System.out.println(i);
-				return false;
+				verifyResult = false;
+				return;
 			}
 			if(MyVector.compare(wholeData[i].enterCSTimeStamp,wholeData[i-1].leaveCSTimeStamp) != 1) {
 				System.out.println(i);
-				return false;
+				verifyResult = false;
+				return;
 			}
 			i++;
-		}		
-		return true;
+		}
+		verifyResult = true;
+		return;
 	}
 	
 	
-	boolean verifyResult(){
+	void verify(){
 		readDataFromFile();
 		sortedResult = megerSortK(dataArray, 0, dataArray.length);
 		int len = sortedResult.length;
@@ -129,7 +140,7 @@ public class CorrectnessVerify {
 			MyLogManager.getSingle().getLog("verifyResult").log(sortedResult[i].toString());
 			i++;
 		}		
-		return testCorrect(sortedResult);		
+		testCorrect(sortedResult);		
 	}
 	
 	void caculate(){
@@ -148,15 +159,16 @@ public class CorrectnessVerify {
 			MyLogManager.getSingle().getLog("E").log(e+"\t"+sumE+ "\t" + sortedResult[i].nodeId);			
 			i++;
 		}		
-		meanSD = sumSD/(len-1);		
-		MyLogManager.getSingle().getLog("meanSD").log(meanSD+"");
-		meanE = sumE/(len-1);		
-		MyLogManager.getSingle().getLog("meanE").log(meanE+"");
+		meanSD = sumSD/(double)(len-1);		
+		//MyLogManager.getSingle().getLog("meanSD").log(meanSD+"");
+		meanE = sumE/(double)(len-1);		
+		//MyLogManager.getSingle().getLog("meanE").log(meanE+"");
 	}
 	
 	public static void main(String[] args) {
-		String fileName = "./TimeInterval";
-		String curDirecotry = "";
+		
+		String fileName = System.getProperty("user.dir")+"/TimeInterval";
+		String curDirecotry = System.getProperty("user.dir")+"/";
 		int numNodes = 3;
 		if(args.length > 0){
 			fileName = args[0];	
@@ -170,10 +182,22 @@ public class CorrectnessVerify {
 		}
 		MyLogManager.getSingle().setDir(curDirecotry);
 		CorrectnessVerify test = new CorrectnessVerify(fileName, numNodes);
-		boolean result = test.verifyResult();
-		MyLogManager.getSingle().getLog("verifyResult").log(String.valueOf(result));
+		test.verify();		
 		test.caculate();
-		System.out.println("verifyResult: " + result);
+		System.out.println("verifyResult: " + test.verifyResult);
+		PerformanceParser.parseFile(curDirecotry+"performance_file_node_", numNodes);
+		MyLogManager.getSingle().getLog("SummaryResult").log("n:\t" + String.valueOf(numNodes));
+		MyLogManager.getSingle().getLog("SummaryResult").log("verifyResult:\t" + String.valueOf(test.verifyResult));
+		MyLogManager.getSingle().getLog("SummaryResult").log("message complexity per cs:\t" + String.valueOf(PerformanceParser.result[0]));
+		MyLogManager.getSingle().getLog("SummaryResult").log("reponse time (ms):\t" + String.valueOf(PerformanceParser.result[1]));
+		MyLogManager.getSingle().getLog("SummaryResult").log("system throughput per s:\t" + String.valueOf(1000/(test.meanE+test.meanSD)));
+		MyLogManager.getSingle().getLog("SummaryResult").log("meanSD (ms):\t" + String.valueOf(test.meanSD));
+		MyLogManager.getSingle().getLog("SummaryResult").log("meanE (ms):\t" + String.valueOf(test.meanE));		
+		MyLogManager.getSingle().getLog("SummaryResult").log("sumSD (ms):\t" + String.valueOf(test.sumSD));
+		MyLogManager.getSingle().getLog("SummaryResult").log("sumE (ms):\t" + String.valueOf(test.sumE));		
+		MyLogManager.getSingle().getLog("SummaryPureData").log(String.valueOf(PerformanceParser.result[0]));
+		MyLogManager.getSingle().getLog("SummaryPureData").log(String.valueOf(PerformanceParser.result[1]));
+		MyLogManager.getSingle().getLog("SummaryPureData").log(String.valueOf(1000/(test.meanE+test.meanSD)));		
 		System.out.println("CorrectnessTest finished");
 	}
 }

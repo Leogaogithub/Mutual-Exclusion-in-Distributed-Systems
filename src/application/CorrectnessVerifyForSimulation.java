@@ -49,10 +49,10 @@ public class CorrectnessVerifyForSimulation {
 					String curdir = curDirecotry+"n"+numNodes+"-d"+d+"-c"+c+"/"+i + "/";
 					MyLogManager.getSingle().setDir(curdir);
 					CorrectnessVerify test = new CorrectnessVerify(curdir+"TimeInterval", numNodes);
-					boolean result = test.verifyResult();					
-					MyLogManager.getSingle().getLog("verifyResult").log(String.valueOf(result));
+					test.verify();					
+					MyLogManager.getSingle().getLog("verifyResult").log(String.valueOf(test.verifyResult));
 					test.caculate();
-					System.out.println(curdir + " verifyResult: " + result);
+					System.out.println(curdir + " verifyResult: " + test.verifyResult);
 					System.out.println("CorrectnessTest finished");															
 				}				
 			}			
