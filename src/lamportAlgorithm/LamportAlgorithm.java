@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import shareUtil.IMutualExclusiveStrategy;
 import shareUtil.IreceiveMessage;
@@ -14,14 +15,14 @@ import shareUtil.MessageSenderService;
 public class LamportAlgorithm implements IMutualExclusiveStrategy,IreceiveMessage {
 	//LamportLogicalClockService clock ;
 	Set<Integer> conditionL1 = new HashSet<Integer>();
-	PriorityQueue<TimeStampWithID> pqueue ;
+	PriorityBlockingQueue <TimeStampWithID> pqueue ;
 	TimeStampWithID localRequestStamp; 
     int localId ;
     int numOfNode;
     IreceiveMessage application = null;    
 	public LamportAlgorithm(int numOfNode, int localId/*, IreceiveMessage application*/){
 		Comparator<TimeStampWithID> comparator = new TimeStampWithID(0,0);
-		pqueue = new PriorityQueue<TimeStampWithID>(numOfNode, comparator);
+		pqueue = new PriorityBlockingQueue<TimeStampWithID>(numOfNode, comparator);
 		localRequestStamp = new TimeStampWithID(localId, Integer.MAX_VALUE);
 		//clock = LamportLogicalClockService.getInstance();
 		this.localId = localId;
