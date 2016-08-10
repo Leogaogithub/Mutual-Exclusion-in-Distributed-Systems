@@ -1,7 +1,7 @@
-Project 2: Verify and Performance Evaluation of Mutual Exclusive
+﻿Project 2: Verify and Performance Evaluation of Mutual Exclusive
 Services
 
-**Team Member**: Yifan Xu/ Longhao Gao
+**Team Member**: Xin Tong/Yifan Xu/ Longhao Gao
 
 <span id="h.vnwy1o4fnlvh" class="anchor"><span id="_Toc457597499" class="anchor"></span></span>Project background:
 ==================================================================================================================
